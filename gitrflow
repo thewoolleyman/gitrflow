@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+#  https://github.com/thewoolleyman/gitrflow
+#  Copyright (c) 2014 Chad Woolley - The MIT License
+
+### Bash setup
+
+# http://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+
+gitrflow_bash_xtrace=${GITRFLOW_BASH_XTRACE:-false}
+if [[ ${gitrflow_bash_xtrace} == 'true' ]]; then
+  export PS4="+(\${BASH_SOURCE}:\${LINENO}): \${FUNCNAME[0]:+\${FUNCNAME[0]}(): }"
+  set -o xtrace
+fi
+
+gitrflow_bash_verbose=${GITRFLOW_BASH_VERBOSE:-false}
+if [[ ${gitrflow_bash_verbose} == 'true' ]]; then
+  set -o verbose
+fi
+
+set -o errexit # AKA -e - exit immediately on errors (http://mywiki.wooledge.org/BashFAQ/105)
+set -o errtrace # AKA -E - any trap on ERR is inherited by subshell
+set -o noclobber # AKA -C - disallow '>' to overwrite file (see http://mywiki.wooledge.org/NoClobber)
+set -o nounset # AKA -u - guard against unused variables (see http://mywiki.wooledge.org/BashFAQ/035)
+set -o pipefail # fail when pipelines contain an error (see http://www.gnu.org/software/bash/manual/html_node/Pipelines.html)
+
+_log_prefix="[gitrflow] ${BASH_SOURCE}:"
+
+function onexit() {
+  local exit_status=${1:-$?}
+  if [[ ${exit_status} != 0 ]]; then
+    _error_line="error trapped."
+  else
+    _error_line=''
+  fi
+  if [[ $(type -t onexit_hook) = 'function' ]]; then
+    onexit_hook
+  fi
+  echo "$_log_prefix $_error_line Exiting $0 with exit status $exit_status"
+  exit "${exit_status}"
+}
+
+function disable_error_checking() {
+  trap - ERR
+  set +o errexit
+}
+
+function enable_error_checking() {
+  trap onexit ERR
+  set -o errexit
+}
+
+trap onexit HUP INT QUIT TERM ERR
+
+### Global variables
+#declare verbose
+
+### Option handling
+
+function print_version() {
+  echo '0.0.1'
+}
+
+function print_usage() {
+  printf "Usage: gitrflow <command> [options]\n\n"
+  echo "See https://github.com/thewoolleyman/gitrflow for more information"
+  exit 1
+}
+
+function parse_options() {
+  set +o nounset
+
+  # see http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
+  if [ -z "${1+x}" ] ; then
+    print_usage
+  fi
+
+  # from http://mywiki.wooledge.org/BashFAQ/035
+  while :; do
+    case ${1} in
+      --version)
+        print_version
+        exit 0
+        ;;
+      *)
+        break
+    esac
+
+    shift
+  done
+
+  set -o nounset
+}
+
+function run() {
+  set +o nounset
+
+  parse_options "${@}"
+
+  set -o nounset
+}
+
+### invoke script
+set +o nounset
+run "${@}"
+set -o nounset
