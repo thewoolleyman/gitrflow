@@ -63,7 +63,9 @@ function print_version() {
 
 function print_usage() {
   printf "Usage: gitrflow <command> [options]\n\n"
-  echo "See https://github.com/thewoolleyman/gitrflow for more information"
+  printf "Options:\n"
+  printf "    -V, --version\t\tDisplay the program version\n"
+  printf "\nSee https://github.com/thewoolleyman/gitrflow for more information"
   exit 1
 }
 
@@ -78,7 +80,7 @@ function parse_options() {
   # from http://mywiki.wooledge.org/BashFAQ/035
   while :; do
     case ${1} in
-      --version)
+      -V|--version)
         print_version
         exit 0
         ;;
