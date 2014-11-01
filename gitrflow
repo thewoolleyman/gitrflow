@@ -61,10 +61,11 @@ function print_version() {
   echo '0.0.1'
 }
 
-function print_usage() {
+function print_usage_and_exit() {
   printf "Usage: gitrflow <command> [options]\n\n"
   printf "Options:\n"
   printf "    -V, --version\t\tDisplay the program version\n"
+  printf "    --\t\tIgnore all following options\n"
   printf "\nSee https://github.com/thewoolleyman/gitrflow for more information"
   exit 1
 }
@@ -74,7 +75,11 @@ function parse_options() {
 
   # see http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
   if [ -z "${1+x}" ] ; then
-    print_usage
+    print_usage_and_exit
+  fi
+
+  if [[ "${1}" == '--' ]] ; then
+    print_usage_and_exit
   fi
 
   # from http://mywiki.wooledge.org/BashFAQ/035
@@ -83,6 +88,10 @@ function parse_options() {
       -V|--version)
         print_version
         exit 0
+        ;;
+      --) # ignore all following options
+        shift
+        break
         ;;
       *)
         break
@@ -96,9 +105,7 @@ function parse_options() {
 
 function run() {
   set +o nounset
-
   parse_options "${@}"
-
   set -o nounset
 }
 
