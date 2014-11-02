@@ -59,6 +59,8 @@ trap onexit HUP INT QUIT TERM ERR
 ###
 
 function run_branch_command() {
+  fail_unless_repo_clean
+
   branch_type=${1}
   command=${2}
   branch=${3}
@@ -73,6 +75,12 @@ function run_branch_command() {
       ;;
   esac
 
+}
+
+function fail_unless_repo_clean() {
+  if [[ -n $(git status --short) ]] ; then
+    print_error_and_exit 'ERROR: Local repo is not clean. Please fix and retry.'
+  fi
 }
 
 function feature_start() {
@@ -115,7 +123,7 @@ function print_error_and_exit() {
 function parse_options() {
   set +o nounset
 
-  # see http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
+  # see http://stackoverflow.com/a/13864829/25192
   if [[ -z "${1+x}" ]] ; then
     print_usage_and_exit
   fi
@@ -154,7 +162,7 @@ function parse_options() {
         break
         ;;
       *)
-        # see http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
+        # see http://stackoverflow.com/a/13864829/25192
         if [[ -z "${1+x}" ]] ; then
           break
         else

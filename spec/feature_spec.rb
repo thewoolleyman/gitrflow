@@ -15,6 +15,16 @@ describe 'start' do
     expect(out).to match(/'git rflow --help' for usage./)
   end
 
+  it 'fails if local repo is not clean' do
+    local_repo, _ = make_cloned_repo
+    FileUtils.cd(local_repo) do
+      FileUtils.touch('dirty_file')
+      cmd = "#{gitrflow_cmd} feature start feature1"
+      out = run(cmd, out: false, out_only_on_ex: true, exp_rc: 1)
+      expect(out).to match(/ERROR: Local repo is not clean. Please fix and retry./)
+    end
+  end
+
   it 'creates the specified feature branch' do
     local_repo, _ = make_cloned_repo
     branch = 'feature1'

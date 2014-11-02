@@ -7,6 +7,9 @@ require_relative 'process_helper'
 module SpecHelper
   include ProcessHelper
 
+  # Uncomment to trace bash script execution
+  # ENV['GITRFLOW_BASH_XTRACE'] = 'true'
+
   ###
   ### helpers for local invocation of gitrflow
   ###
