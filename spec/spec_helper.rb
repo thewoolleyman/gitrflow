@@ -6,6 +6,10 @@ require_relative 'process_helper'
 module SpecHelper
   include ProcessHelper
 
+  ###
+  ### helpers for local invocation of gitrflow
+  ###
+
   def path_with_gitrflow
     "#{File.expand_path('../../', __FILE__)}:$PATH"
   end
@@ -16,6 +20,23 @@ module SpecHelper
 
   def gitrflow_cmd
     "PATH=#{path_with_gitrflow} git rflow"
+  end
+
+  ###
+  ### support for creating local git repos for testing
+  ###
+
+  def make_cloned_repo
+    local_repo_parent_dir = Dir.mktmpdir
+    remote_repo = make_remote_repo
+    run("cd #{local_repo_parent_dir} && git clone #{remote_repo} local_repo")
+    ["#{local_repo_parent_dir}/local_repo", remote_repo]
+  end
+
+  def make_remote_repo
+    dir = Dir.mktmpdir('remote_repo_')
+    run("cd #{dir} && git init", out: false)
+    dir
   end
 end
 include SpecHelper

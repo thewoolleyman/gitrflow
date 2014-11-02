@@ -58,11 +58,31 @@ trap onexit HUP INT QUIT TERM ERR
 ### Command Processing
 ###
 
-function run_command() {
+function run_branch_command() {
   branch_type=${1}
   command=${2}
-  branch_name=${3}
-  echo "${command} ${branch_type} branch ${branch_name}"
+  branch=${3}
+
+  case ${branch_type} in
+    feature)
+      case ${command} in
+        start)
+          feature_start "${branch}"
+          ;;
+      esac
+      ;;
+  esac
+
+}
+
+function feature_start() {
+  branch=${1}
+  printf "Switched to a new branch '%s'\n\n" "${branch}"
+  printf "Summary of actions:\n"
+  printf "%s A new branch '%s' was created, based on 'master'\n" '-' "${branch}"
+  printf "%s You are now on branch '%s'\n\n" '-' "${branch}"
+  printf "Now, start committing on your feature. When done, use:\n\n" '-' "${branch}"
+  printf "     git flow feature finish %s" "${branch}"
 }
 
 ###
@@ -95,7 +115,7 @@ function parse_options() {
   set +o nounset
 
   # see http://stackoverflow.com/questions/3601515/how-to-check-if-a-variable-is-set-in-bash
-  if [ -z "${1+x}" ] ; then
+  if [[ -z "${1+x}" ]] ; then
     print_usage_and_exit
   fi
 
@@ -111,7 +131,7 @@ function parse_options() {
         if [[ "${2}" ]]; then
           command=$2
           if [[ "${3}" ]]; then
-            branch_name=$3
+            branch=$3
             shift 3
             continue
           else
@@ -141,7 +161,7 @@ function parse_options() {
 
   set -o nounset
 
-  run_command "${branch_type}" "${command}" "${branch_name}"
+  run_branch_command "${branch_type}" "${command}" "${branch}"
 }
 
 function invoke() {

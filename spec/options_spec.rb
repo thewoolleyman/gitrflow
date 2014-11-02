@@ -18,6 +18,8 @@ describe 'options' do
     expect(out).to match(version_regex)
   end
 
+  it 'fails when unprocessed parameters exist'
+
   it '-h, --help' do
     expect(run("#{gitrflow_path} --help", out: false, exp_rc: 1)).to match(/^Usage:/)
     expect(run("#{gitrflow_path} -h", out: false, exp_rc: 1)).to match(/^Usage:/)
