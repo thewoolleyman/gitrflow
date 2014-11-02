@@ -1,39 +1,7 @@
+require 'rspec'
 require 'open3'
+require_relative 'process_helper'
 
 def gitrflow_path
-  File.expand_path("../../gitrflow", __FILE__)
-end
-
-def process(cmd, options={})
-  valid_options = [
-    :expected_exit_status,
-    :include_output_in_exception,
-    :puts_output,
-  ]
-  invalid_options = (options.keys - valid_options)
-  raise "Invalid option(s) '#{invalid_options.join(', ')}' given.  " +
-          "Valid options are: #{valid_options.join(', ')}" unless invalid_options.empty?
-  Open3.popen2e(cmd) do |stdin, stdout_and_stderr, wait_thr|
-    output = ''
-    while line = stdout_and_stderr.gets
-      puts line unless options[:puts_output] == false
-      output += line
-    end
-
-    expected_exit_status = options[:expected_exit_status] || 0
-    exit_status = wait_thr.value
-    unless exit_status.exitstatus == expected_exit_status
-      exit_status_msg = expected_exit_status == 0 ?
-        '' :
-        " (expected #{expected_exit_status})"
-
-      exception_message = "Command failed, #{exit_status.to_s}#{exit_status_msg}. " +
-        "Command: `#{cmd}`."
-      if options[:include_output_in_exception]
-        exception_message += " Command Output: \"#{output}\""
-      end
-      raise exception_message
-    end
-    output
-  end
+  File.expand_path('../../gitrflow', __FILE__)
 end

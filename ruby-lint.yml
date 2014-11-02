@@ -1,0 +1,9 @@
+---
+analysis_classes:
+ - argument_amount
+ - pedantics
+ - shadowing_variables
+# - undefined_methods
+ - undefined_variables
+ - unused_variables
+ - useless_equality_checks
