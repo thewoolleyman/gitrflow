@@ -3,7 +3,9 @@
 #  https://github.com/thewoolleyman/gitrflow
 #  Copyright (c) 2014 Chad Woolley - The MIT License
 
+###
 ### Bash setup
+###
 
 # http://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
 
@@ -52,21 +54,40 @@ function enable_error_checking() {
 
 trap onexit HUP INT QUIT TERM ERR
 
-### Global variables
-#declare verbose
+###
+### Command Processing
+###
 
+function run_command() {
+  branch_type=${1}
+  command=${2}
+  branch_name=${3}
+  echo "${command} ${branch_type} branch ${branch_name}"
+}
+
+###
 ### Option handling
+###
 
 function print_version() {
-  echo '0.0.1'
+  echo 'git-rflow, version 0.0.1'
 }
 
 function print_usage_and_exit() {
-  printf "Usage: gitrflow <command> [options]\n\n"
+  printf "Usage: gitrflow <branch type> <command> [options]\n\n"
+  printf "Branch Types:\n"
+  printf "    feature\n"
+  printf "\n"
   printf "Options:\n"
   printf "    -V, --version\t\tDisplay the program version\n"
   printf "    --\t\tIgnore all following options\n"
-  printf "\nSee https://github.com/thewoolleyman/gitrflow for more information"
+  printf "\nSee https://github.com/thewoolleyman/gitrflow for more information."
+  exit 1
+}
+
+function print_error_and_exit() {
+  echo "${1}" >&2
+  printf "'git rflow --help' for usage.\n"
   exit 1
 }
 
@@ -85,6 +106,21 @@ function parse_options() {
   # from http://mywiki.wooledge.org/BashFAQ/035
   while :; do
     case ${1} in
+      feature) # Takes an option arguments, ensuring they have been specified.
+        branch_type=$1
+        if [[ "${2}" ]]; then
+          command=$2
+          if [[ "${3}" ]]; then
+            branch_name=$3
+            shift 3
+            continue
+          else
+            print_error_and_exit 'ERROR: The feature branch name is required.'
+          fi
+        else
+          print_error_and_exit 'ERROR: The feature branch command is required.'
+        fi
+        ;;
       -h|--help)
         print_usage_and_exit
         ;;
@@ -104,15 +140,20 @@ function parse_options() {
   done
 
   set -o nounset
+
+  run_command "${branch_type}" "${command}" "${branch_name}"
 }
 
-function run() {
+function invoke() {
   set +o nounset
   parse_options "${@}"
   set -o nounset
 }
 
+###
 ### invoke script
+###
+
 set +o nounset
-run "${@}"
+invoke "${@}"
 set -o nounset

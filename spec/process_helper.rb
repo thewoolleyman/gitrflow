@@ -34,7 +34,7 @@ module ProcessHelper
   def convert_short_options(options)
     valid_option_pairs.each do |pair|
       long, short = pair
-      options[long] = options[short] if options[short]
+      options[long] = options.delete(short) unless options[short].nil?
     end
   end
 
