@@ -77,7 +77,8 @@ function run_branch_command() {
 
 function feature_start() {
   branch=${1}
-  printf "Switched to a new branch '%s'\n\n" "${branch}"
+  git checkout -b "${branch}"
+  printf "\n"
   printf "Summary of actions:\n"
   printf "%s A new branch '%s' was created, based on 'master'\n" '-' "${branch}"
   printf "%s You are now on branch '%s'\n\n" '-' "${branch}"

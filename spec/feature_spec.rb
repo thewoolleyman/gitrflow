@@ -32,6 +32,8 @@ describe 'start' do
         cmd = "#{gitrflow_cmd} feature start #{branch}"
         out = run(cmd, out: false, out_only_on_ex: true)
         expect(out).to eq(expected_out)
+        git_status = run('git status', out: false, out_only_on_ex: true)
+        expect(git_status).to match(/On branch #{branch}/)
       end
     end
   end
