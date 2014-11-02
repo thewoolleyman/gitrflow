@@ -29,13 +29,14 @@ module SpecHelper
   def make_cloned_repo
     local_repo_parent_dir = Dir.mktmpdir
     remote_repo = make_remote_repo
-    run("cd #{local_repo_parent_dir} && git clone #{remote_repo} local_repo")
+    cmd = "cd #{local_repo_parent_dir} && git clone #{remote_repo} local_repo"
+    run(cmd, out: false, out_only_on_ex: true)
     ["#{local_repo_parent_dir}/local_repo", remote_repo]
   end
 
   def make_remote_repo
     dir = Dir.mktmpdir('remote_repo_')
-    run("cd #{dir} && git init", out: false)
+    run("cd #{dir} && git init", out: false, out_only_on_ex: true)
     dir
   end
 end
