@@ -18,7 +18,19 @@ describe 'options' do
     expect(out).to match(version_regex)
   end
 
-  it 'fails when unprocessed parameters exist'
+  it 'fails when unprocessed parameters exist' do
+    local_repo, _ = make_cloned_repo
+    FileUtils.cd(local_repo) do
+      cmd = "#{gitrflow_cmd} feature start feature1 unprocessed"
+      out = run(cmd, out: false, out_only_on_ex: true, exp_rc: 1)
+      expect(out).to match(/ERROR: Unrecognized parameter 'unprocessed'/)
+    end
+  end
+
+  it 'fails when invalid options exist' do
+    out = run("#{gitrflow_cmd} --invalid", out: false, exp_rc: 1)
+    expect(out).to match(/ERROR: Unrecognized parameter '--invalid'/)
+  end
 
   it '-h, --help' do
     expect(run("#{gitrflow_path} --help", out: false, exp_rc: 1)).to match(/^Usage:/)

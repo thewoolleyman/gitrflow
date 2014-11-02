@@ -29,7 +29,6 @@ describe 'start' do
       "     git flow feature finish #{branch}"
 
       FileUtils.cd(local_repo) do
-        # $trace = true
         cmd = "#{gitrflow_cmd} feature start #{branch}"
         out = run(cmd, out: false, out_only_on_ex: true)
         expect(out).to eq(expected_out)
