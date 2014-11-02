@@ -13,7 +13,11 @@ module ProcessHelper
       [
         :puts_output,
         :out,
-      ]
+      ],
+      [
+        :puts_output_only_on_exception,
+        :out_only_on_ex,
+      ],
     ]
   end
 
@@ -38,10 +42,9 @@ module ProcessHelper
     end
   end
 
-  def get_output(options, stdout_and_stderr)
+  def get_output(stdout_and_stderr)
     output = ''
     while (line = stdout_and_stderr.gets)
-      puts line unless options[:puts_output] == false
       output += line
     end
     output
@@ -63,6 +66,7 @@ module ProcessHelper
     if options[:include_output_in_exception]
       exception_message += " Command Output: \"#{output}\""
     end
+    puts output if options[:puts_output_only_on_exception] == true
     fail exception_message
   end
 
@@ -71,7 +75,8 @@ module ProcessHelper
     validate_options(options)
     convert_short_options(options)
     Open3.popen2e(cmd) do |_, stdout_and_stderr, wait_thr|
-      output = get_output(options, stdout_and_stderr)
+      output = get_output(stdout_and_stderr)
+      puts output unless options[:puts_output] == false
 
       handle_exit_status(cmd, options, output, wait_thr)
       output
