@@ -1,4 +1,5 @@
 ---
+# http://code.yorickpeterse.com/ruby-lint/latest/
 analysis_classes:
  - argument_amount
  - pedantics
