@@ -85,6 +85,9 @@ function parse_options() {
   # from http://mywiki.wooledge.org/BashFAQ/035
   while :; do
     case ${1} in
+      -h|--help)
+        print_usage_and_exit
+        ;;
       -V|--version)
         print_version
         exit 0

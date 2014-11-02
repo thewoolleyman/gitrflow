@@ -3,7 +3,7 @@ require_relative 'spec_helper'
 describe 'static analysis checks' do
   it 'shellcheck' do
     begin
-      process('which shellcheck', puts_output: false)
+      run('which shellcheck', out: false)
     rescue
       pending 'Unable to run shellcheck.  See http://www.shellcheck.net/about.html ' \
                 'or on OSX, install via `brew insetall shellcheck`'
@@ -11,7 +11,7 @@ describe 'static analysis checks' do
     end
 
     begin
-      process("shellcheck #{gitrflow_path}")
+      run("shellcheck #{gitrflow_path}")
     rescue
       $stderr.puts('Shellcheck failed.  See https://github.com/koalaman/shellcheck/wiki')
       raise
@@ -19,10 +19,10 @@ describe 'static analysis checks' do
   end
 
   it 'ruby-lint' do
-    process("ruby-lint #{File.expand_path('../../spec', __FILE__)}")
+    run("ruby-lint #{File.expand_path('../../spec', __FILE__)}")
   end
 
   it 'rubocop' do
-    process('rubocop')
+    run('rubocop')
   end
 end

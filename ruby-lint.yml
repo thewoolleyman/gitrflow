@@ -7,3 +7,5 @@ analysis_classes:
  - undefined_variables
  - unused_variables
  - useless_equality_checks
+directories:
+  - spec
