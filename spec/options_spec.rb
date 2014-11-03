@@ -22,7 +22,7 @@ describe 'options' do
     local_repo, _ = make_cloned_repo
     FileUtils.cd(local_repo) do
       cmd = "#{gitrflow_cmd} feature start feature1 unprocessed"
-      out = run(cmd, out: false, out_only_on_ex: true, exp_rc: 1)
+      out = run(cmd, out: false, exp_rc: 1)
       expect(out).to match(/ERROR: Unrecognized parameter 'unprocessed'/)
     end
   end

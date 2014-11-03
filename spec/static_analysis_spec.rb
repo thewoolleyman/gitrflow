@@ -23,6 +23,6 @@ describe 'static analysis checks' do
   end
 
   it 'rubocop' do
-    run('rubocop', out: false, out_only_on_ex: true)
+    run('rubocop', out: false)
   end
 end

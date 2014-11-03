@@ -34,7 +34,7 @@ module SpecHelper
     local_repo_parent_dir = Dir.mktmpdir
     remote_repo = make_remote_repo(commits)
     FileUtils.cd(local_repo_parent_dir) do
-      run("git clone #{remote_repo} local_repo", out: false, out_only_on_ex: true)
+      run("git clone #{remote_repo} local_repo", out: false)
     end
     ["#{local_repo_parent_dir}/local_repo", remote_repo]
   end
@@ -49,15 +49,13 @@ module SpecHelper
     end
     remote_repo_dir = Dir.mktmpdir('remote_repo_')
     FileUtils.cd(remote_repo_dir) do
-      run('git init', out: false, out_only_on_ex: true)
+      run('git init', out: false)
       commits.each do |commit|
         commit.each do |filename, contents|
-          run("echo #{contents} > #{filename}", out: false, out_only_on_ex: true)
+          run("echo #{contents} > #{filename}", out: false)
         end
       end
-      unless commits.empty?
-        run('git add . && git ci -m "commit 1"', out: false, out_only_on_ex: true)
-      end
+      run('git add . && git ci -m "commit 1"', out: false) unless commits.empty?
     end
     remote_repo_dir
   end

@@ -7,6 +7,9 @@ Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 20
 
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
 Style/SpaceAroundEqualsInParameterDefault:
   # compatibility with RubyMine defaults (apparently can't override?)
   EnforcedStyle: space
