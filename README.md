@@ -12,17 +12,17 @@ commands.
 
 ## Feature Branch Commands
 
-### rflow start
+### rflow feature start
 
 `rflow feature start <feature branch name>`: creates a new feature branch off of the
 current branch, which is then considered the "upstream" of the feature branch.
 
-### rflow update
+### rflow feature update
 
 `rflow feature update`: rebases the current feature branch onto the tip of the upstream
 branch.
 
-### rflow publish
+### rflow feature publish
 
 `rflow feature publish`: **safely** publishes the current feature branch to the remote
 branch. "**safely**" means that the current feature branch is rebased onto the
@@ -31,7 +31,7 @@ cannot be automatically resolved by Git, gitrflow will pause, allow you to
 manually resolve them, then `--continue` (just like the `--continue` option
 on the underlying rebase command)
 
-### rflow end
+### rflow feature end
 
 `rflow feature end`: merges (`merge --no-ff`) a feature branch back into the upstream
 branch, after first ensuring it is fully rebased onto the remote branch and
