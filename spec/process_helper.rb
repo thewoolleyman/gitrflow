@@ -70,7 +70,7 @@ module ProcessHelper
     fail exception_message
   end
 
-  def process(cmd, options={})
+  def process(cmd, options = {})
     options = options.dup
     validate_options(options)
     convert_short_options(options)

@@ -9,19 +9,43 @@ describe 'branch type parameter' do
 end
 
 describe 'start' do
-  it 'fails if no branch name is specified' do
-    out = run("#{gitrflow_cmd} feature start", out: false, exp_rc: 1)
-    expect(out).to match(/ERROR: The feature branch name is required./)
-    expect(out).to match(/'git rflow --help' for usage./)
-  end
+  describe 'fails if' do
+    it 'no branch name is specified' do
+      out = run("#{gitrflow_cmd} feature start", out: false, exp_rc: 1)
+      expect(out).to match(/ERROR: The feature branch name is required./)
+      expect(out).to match(/'git rflow --help' for usage./)
+    end
 
-  it 'fails if local repo is not clean' do
-    local_repo, _ = make_cloned_repo
-    FileUtils.cd(local_repo) do
-      FileUtils.touch('dirty_file')
-      cmd = "#{gitrflow_cmd} feature start feature1"
-      out = run(cmd, out: false, out_only_on_ex: true, exp_rc: 1)
-      expect(out).to match(/ERROR: Local repo is not clean. Please fix and retry./)
+    it 'local repo is not clean' do
+      local_repo, _ = make_cloned_repo
+      FileUtils.cd(local_repo) do
+        FileUtils.touch('dirty')
+        cmd = "#{gitrflow_cmd} feature start feature1"
+        out = run(cmd, out: false, out_only_on_ex: true, exp_rc: 1)
+        expect(out).to match(/ERROR: Local repo is not clean. Please fix and retry./)
+      end
+    end
+
+    it 'local repo is "gone"' do
+      local_repo, _ = make_cloned_repo([])
+      FileUtils.cd(local_repo) do
+        FileUtils.touch('unpushed')
+        run('git add unpushed && git ci -m "unpushed"', out: false, out_only_on_ex: true)
+        cmd = "#{gitrflow_cmd} feature start feature1"
+        out = run(cmd, out: false, out_only_on_ex: true, exp_rc: 1)
+        expect(out).to match(/ERROR: Local repo is "gone". Please fix and retry./)
+      end
+    end
+
+    it 'local repo has unpushed changes' do
+      local_repo, _ = make_cloned_repo
+      FileUtils.cd(local_repo) do
+        FileUtils.touch('unpushed')
+        run('git add unpushed && git ci -m "unpushed"', out: false, out_only_on_ex: true)
+        cmd = "#{gitrflow_cmd} feature start feature1"
+        out = run(cmd, out: false, out_only_on_ex: true, exp_rc: 1)
+        expect(out).to match(/ERROR: Local repo has unpushed changes. Please fix and retry./)
+      end
     end
   end
 

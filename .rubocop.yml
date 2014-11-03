@@ -9,7 +9,7 @@ Metrics/MethodLength:
 
 Style/SpaceAroundEqualsInParameterDefault:
   # compatibility with RubyMine defaults (apparently can't override?)
-  EnforcedStyle: no_space
+  EnforcedStyle: space
 
 Style/TrailingComma:
   # can't make this only apply to arrays and not params, so it's disabled

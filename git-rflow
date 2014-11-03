@@ -60,6 +60,7 @@ trap onexit HUP INT QUIT TERM ERR
 
 function run_branch_command() {
   fail_unless_repo_clean
+  fail_if_unpushed_changes
 
   branch_type=${1}
   command=${2}
@@ -80,6 +81,16 @@ function run_branch_command() {
 function fail_unless_repo_clean() {
   if [[ -n $(git status --short) ]] ; then
     print_error_and_exit 'ERROR: Local repo is not clean. Please fix and retry.'
+  fi
+}
+
+function fail_if_unpushed_changes() {
+  status_branch_output=$(git status --short --branch)
+  if [[ "${status_branch_output}" == *'[gone]'* ]] ; then
+    print_error_and_exit 'ERROR: Local repo is "gone". Please fix and retry.'
+  fi
+  if [[ ${status_branch_output} =~ \[(ahead|behind) ]] ; then
+    print_error_and_exit 'ERROR: Local repo has unpushed changes. Please fix and retry.'
   fi
 }
 
