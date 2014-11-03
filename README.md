@@ -1,7 +1,7 @@
 # gitrflow
 
 Git extensions to provide high-level repository operations for a rebase-based
-git workflow.  Similar to [gitflow](https://github.com/nvie/gitflow), but uses
+git workflow. Similar to [gitflow](https://github.com/nvie/gitflow), but uses
 **constant automatic rebasing** instead of manual merges to manage **feature**
 branches.
 
@@ -25,8 +25,8 @@ branch.
 ### rflow publish
 
 `rflow feature publish`: **safely** publishes the current feature branch to the remote
-branch.  "**safely**" means that the current feature branch is rebased onto the
-remote branch before force-pushing it.  If there are any rebase conflicts which
+branch. "**safely**" means that the current feature branch is rebased onto the
+remote branch before force-pushing it. If there are any rebase conflicts which
 cannot be automatically resolved by Git, gitrflow will pause, allow you to
 manually resolve them, then `--continue` (just like the `--continue` option
 on the underlying rebase command)
@@ -40,7 +40,7 @@ the upstream branch.
 ## Release Branch Commands
 
 "Production" release branches should never have their history rewritten by rebase,
-because their previous history **is** very important to preserve.  So, the
+because their previous history **is** very important to preserve. So, the
 `merge --no-ff` command is used to manage the production release branches.
 
 TODO: Since they don't involve rebasing, managing release branches is a
@@ -55,7 +55,7 @@ feature branches with gitrflow, and everything else with gitflow.
 However, I would simplify it in some cases. E.g., I don't see the need for a
 "develop" branch in many cases, because teams with collective code ownership
 and strong test coverage and continuous integration can integrate directly
-to the master branch.  Plus, if a team does find a need for a "develop" branch
+to the master branch. Plus, if a team does find a need for a "develop" branch
 to integrate and stabilize changes prior to merging them to master, then
 it's easy to just treat it as a feature branch (which is also an upstream) using
 gitrflow.
@@ -67,7 +67,7 @@ gitrflow.
 Git has become the de-facto tool for version control in the modern software
 industry.
 
-However, it is very powerful and complex.  One of the largest areas of
+However, it is very powerful and complex. One of the largest areas of
 contention and disagreement in the Git community is whether to use
 `merge` or `rebase` to manage **feature** branches.
 
@@ -81,12 +81,12 @@ to prefer `merge` instead.
 ## Problems and their solutions
 
 ***IMPORTANT NOTE:*** *The following discussion only applies to ***feature***
- branches.  The `merge --no-ff` command is still used to manage the
+ branches. The `merge --no-ff` command is still used to manage the
  master branch and production release branches, which should never have
  their history rewritten by rebase.*
 
 I firmly believe that rebase is a demonstrably superior strategy for managing
-feature branches.  The main reasons people avoid it are because:
+feature branches. The main reasons people avoid it are because:
 
 1. It's complex, and requires that specific steps be followed
 2. Since it relies on force pushing branches, it can be dangerous, because it's
@@ -107,7 +107,7 @@ feature branches.  The main reasons people avoid it are because:
 ## "But rebasing loses information..." - A history lesson
 
 Another argument against rebase is that since it rewrites branch history,
-"information is lost".  However, I believe this is a non-goal, and an
+"information is lost". However, I believe this is a non-goal, and an
 invalid argument.
 
 Why? Because the only "history" that I care about, as a Git user, is the
@@ -121,7 +121,7 @@ branch***.
 Another way of explaining this:  Presumably, the upstream branch was changed
 for a good reason, and those changes are going to stick around for good.
 So, I only care if my feature branch works against those latest changes.
-**I'm always moving forward**.  There's rarely any benefit in knowing how my feature
+**I'm always moving forward**. There's rarely any benefit in knowing how my feature
 branch used to work with an obsolete version of the upstream code.
 
 Of course, a change may be reverted on the upstream branch, in which case
@@ -129,12 +129,16 @@ I'll deal with it, and make the corresponding changes when I rebase my feature
 branch onto it, because **I'm always moving forward**
 
 If you are still really concerned about this, then you can always keep a
-backup copy of the state of your feature branch prior to rebasing.  That's
+backup copy of the state of your feature branch prior to rebasing. That's
 your choice, and I plan to eventually add support for this to gitrflow.
 
-However, in no case should this line of argument ever be considered a
+However, there are few cases where this line of argument ever be considered a
 valid reason (in isolation) to avoid using rebase, assuming that the
 actual valid concerns discussed above are addressed by using gitrflow.
+
+The one exception may be when you want to review old rebased commits which are
+deployed or referenced by a tool, but I consider this to be a limitation
+of process or tool (see "Lack of tool support" below).
 
 ## Lack of tool support
 
@@ -144,7 +148,7 @@ continuous integration systems, or other apps that display notifications
 of Git commits, deal with it.
 
 Since the SHAs for commits are changed as a result of a rebasing, a naive approach
-of simply considering each unique SHA to be a new commit will not work well.  It
+of simply considering each unique SHA to be a new commit will not work well. It
 can result in undesired spammy notifications for every rebased commit, even if
 the actual contents of the commit didn't change at all as a result of the rebase.
 
@@ -157,18 +161,18 @@ is available in the git metadata, and if you use GitHub, it's even easier to get
 the information you need from their activity webhooks.
 
 For example, in the case of commit notifications, one simple approach is to "collapse"
-subsequent rebases of the same commit into a single commit in the UI.  This could be
+subsequent rebases of the same commit into a single commit in the UI. This could be
 expandable, and by default it could de-emphasize or omit entries for rebases that
 didn't actually change a commit.
 
 ### Delivery and testing of rebased feature branches
 Another problematic area with rebase workflows can be delivery and testing of feature
-branches prior to merging them back into the upstream.  For a large and longer-lived
+branches prior to merging them back into the upstream. For a large and longer-lived
 feature branch, you may want to frequently deploy it to a running environment in order
-to test it, and accept delivered bugs or features.  In this case, you may want to
+to test it, and accept delivered bugs or features. In this case, you may want to
 to identify which commits on the branch are associated with a specific bugfix or
 feature, and you may have some automated process to generate this via a "changelist"
-or similar report.  These processes may have issues if the SHAs on the feature
+or similar report. These processes may have issues if the SHAs on the feature
 branch have changed as a result of rebasing.
 
 ### Considerations
@@ -191,7 +195,7 @@ of merge commits), you can use `merge --squash --no-commit` to merge the commits
 from the feature branch back into the upstream branch as a single commit.
 
 However, this is an anti-pattern in my opinion, because you've now lost all of the
-individual atomic commits and their corresponding messages.  Small, focused commits
+individual atomic commits and their corresponding messages. Small, focused commits
 are a good practice (TODO: links), so the individual atomic commit sets and their
 message *ARE* useful information which you don't want to lose, especially on feature
 branches which have been long-lived, and contain many different changes for different
@@ -208,17 +212,17 @@ TODO: flesh this out
 
 * No disincentive to incorporate upstream and remote changes **constantly** - The
   more frequently you incorporate upstream changes, the better, because it minimizes
-  the chances of other issues (see other points below).  So, all else aside, you
+  the chances of other issues (see other points below). So, all else aside, you
   should do this as frequently as possible, with the extreme being to integrate
-  immediately after every upstream or remote commit.  With a merge-based
+  immediately after every upstream or remote commit. With a merge-based
   workflow, every conflict resolution, whether it's automatic or manual, results
   in a separate merge commit, so this approach would result in a great number of
-  extra commits.  However, since a rebase workflow *rewrites* the same commit,
+  extra commits. However, since a rebase workflow *rewrites* the same commit,
   it doesn't suffer from this drawback.
 * Atomic commits - the intent of every code change is contained in a single commit,
   not spread across the multiple commits in the case of merge-conflict-resolving
   commits.
-* Linear history - Every commit has a single parent.  No spaghetti git log graphs,
+* Linear history - Every commit has a single parent. No spaghetti git log graphs,
   and simpler to understand diffs in tools (e.g. you don't have to pick "which parent"
   you want to compare to for a diff).
 * Minimize chance of conflicts - more frequently incorporating upstream changes into
@@ -232,7 +236,7 @@ TODO: flesh this out
 * Using git bisect can become harder due to merge commits and multiple parents.
 * Knowing when a branch is safe to delete (i.e. fully incorporated to master) -
   When a rebase workflow rebases a feature branch into master, all the commits on
-  the feature branch are added into master with the unchanged SHAs.  This allows
+  the feature branch are added into master with the unchanged SHAs. This allows
   you to use `git branch -d` (little `-d` vs. big `-D`) to delete the branch,
   and have git automatically ensure that the branch is fully incorporated to master.
   If you squash-merge a feature branch to master (as is often done in a merge-based
@@ -265,13 +269,13 @@ therein:
 * [Git team workflows: merge or rebase?](http://blogs.atlassian.com/2013/10/git-team-workflows-merge-or-rebase/)
   * This is a good article, but it contains one misleading claim: "Using rebase
     to keep your feature branch updated requires that you resolve similar conflicts
-    again and again."  This is **NOT** true, unless you abort the rebase.  Since
+    again and again."  This is **NOT** true, unless you abort the rebase. Since
     rebase incorporates all changes up to the tip of the upstream branch you've
     rebased onto, by definition you never have to resolve the **same** conflict
-    twice.  You may need to resolve a ***similar*** conflict, in the same commit,
+    twice. You may need to resolve a ***similar*** conflict, in the same commit,
     in the same code location, because the code has changed *again* in that location
     on the upstream branch since the last rebase, but it's a ***new*** conflict,
-    not the same one.  Furthermore, this problem exists regardless of whether
+    not the same one. Furthermore, this problem exists regardless of whether
     you are using a rebase or merge workflow.
 
 # Glossary
