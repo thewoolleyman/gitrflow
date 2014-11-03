@@ -5,24 +5,33 @@ git workflow. Similar to [gitflow](https://github.com/nvie/gitflow), but uses
 **constant automatic rebasing** instead of manual merges to manage **feature**
 branches.
 
+# Installing
+
+* `gitrflow` is a single bash script, for maximum portability and ease of installation
+* For now, simply put `gitrflow` on your PATH.  Eventually, it will be distributed
+  via various package managers: Rubygems, Homebrew, Npm, Maven, etc...
+* Development is still in early stage, see "Commands" section for which commands are
+  implemented
+
 # Commands
 
 TODO: Work in progress, for now this is just a high-level description of the
-commands.
+commands, they will be labeled "unimplemented", "in progress", or "implemented"
+for now.
 
 ## Feature Branch Commands
 
-### rflow feature start
+### rflow feature start (implemented)
 
 `rflow feature start <feature branch name>`: creates a new feature branch off of the
 current branch, which is then considered the "upstream" of the feature branch.
 
-### rflow feature update
+### rflow feature update (unimplemented)
 
 `rflow feature update`: rebases the current feature branch onto the tip of the upstream
 branch.
 
-### rflow feature publish
+### rflow feature publish (unimplemented)
 
 `rflow feature publish`: **safely** publishes the current feature branch to the remote
 branch. "**safely**" means that the current feature branch is rebased onto the
@@ -31,9 +40,9 @@ cannot be automatically resolved by Git, gitrflow will pause, allow you to
 manually resolve them, then `--continue` (just like the `--continue` option
 on the underlying rebase command)
 
-### rflow feature end
+### rflow feature finish (unimplemented)
 
-`rflow feature end`: merges (`merge --no-ff`) a feature branch back into the upstream
+`rflow feature finish`: merges (`merge --no-ff`) a feature branch back into the upstream
 branch, after first ensuring it is fully rebased onto the remote branch and
 the upstream branch.
 
@@ -286,6 +295,22 @@ therein:
 * Remote Branch: A branch on the remote repository (i.e. Github)
 * Integrate/Incorporate: Used synonymously to describe the act of including changes
   from an upstream branch or remote branch into the current feature branch.
+
+# Hacking / Contributing
+
+* `gitrflow` is a single bash script, for maximum portability and ease of installation
+* All bash `set -o` commands are set to maximum strictness, to prevent bugs
+* All features are Test-Driven, and should be accompanied by a corresponding spec
+* Specs are written in Ruby Rspec.  To run them:
+  * Checkout the repo
+  * Ensure the correct ruby version is installed (consider `rvm`)
+  * `gem install bundler`
+  * `bundle install`
+  * `rspec`
+* Code quality is enforced by static analysis tools (run as part of the Rspec suite):
+  * shellcheck
+  * ruby-lint
+  * rubocop
 
 # Credits
 
