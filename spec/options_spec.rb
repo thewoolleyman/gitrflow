@@ -37,6 +37,28 @@ describe 'options' do
     expect(out).to match(/^    -h, --help\t\tDisplay this \[h\]elp/)
   end
 
+  it '-t, --trace' do
+    local_repo, _ = make_cloned_repo
+    branch = 'feature1'
+
+    expected_out = "trace: built-in: git 'status' '--short'\n" \
+    "trace: built-in: git 'status' '--short' '--branch'\n" \
+    "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
+    "Switched to a new branch '#{branch}'\n\n" \
+    "Summary of actions:\n" \
+    "- A new branch '#{branch}' was created, based on 'master'\n" \
+    "- You are now on branch '#{branch}'\n\n" \
+    "Now, start committing on your feature. When done, use:\n\n" \
+    "     git flow feature finish #{branch}\n"
+
+    FileUtils.cd(local_repo) do
+      out = run("#{gitrflow_cmd} --trace feature start #{branch}", out: false)
+      expect(out).to eq(expected_out)
+    end
+    help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+    expect(help_out).to match(/^    -t, --trace\t\tEnable the GIT_TRACE environment variable/)
+  end
+
   it '--version' do
     expect(run("#{gitrflow_cmd} --version", out: false)).to match(version_regex)
     out = run("#{gitrflow_cmd} -V", out: false)

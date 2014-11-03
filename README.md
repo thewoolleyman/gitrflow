@@ -72,6 +72,7 @@ gitrflow.
 ## Options
 
 * `-h, --help          Display this help`
+* `-t, --trace         Enable the GIT_TRACE environment variable`
 * `-V, --version       Display the program version`
 * `--                  Ignore all following options`
 
