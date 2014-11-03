@@ -122,8 +122,8 @@ function print_usage_and_exit() {
   printf "    feature start <branch_name>\n"
   printf "\n"
   printf "Options:\n"
-  printf "    -h, --help\t\tDisplay this help\n"
-  printf "    -V, --version\tDisplay the program version\n"
+  printf "    -h, --help\t\tDisplay this [h]elp\n"
+  printf "    -V, --version\tDisplay the program [v]ersion\n"
   printf "    --\t\t\tIgnore all following options\n"
   printf "\nSee https://github.com/thewoolleyman/gitrflow for more information."
   exit 1

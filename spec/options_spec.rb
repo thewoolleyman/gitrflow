@@ -32,15 +32,19 @@ describe 'options' do
 
   it '-h, --help' do
     expect(run("#{gitrflow_path} --help", out: false, exp_rc: 1)).to match(/^Usage:/)
-    expect(run("#{gitrflow_path} -h", out: false, exp_rc: 1)).to match(/^Usage:/)
+    out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+    expect(out).to match(/^Usage:/)
+    expect(out).to match(/^    -h, --help\t\tDisplay this \[h\]elp/)
   end
 
   it '--version' do
     expect(run("#{gitrflow_cmd} --version", out: false)).to match(version_regex)
-    expect(run("#{gitrflow_cmd} -V", out: false)).to match(version_regex)
+    out = run("#{gitrflow_cmd} -V", out: false)
+    expect(out).to match(version_regex)
+    expect(out).to match(version_regex)
     expect(
       run("#{gitrflow_cmd}", out: false, exp_rc: 1)
-    ).to match(/^    -V, --version/m)
+    ).to match(/^    -V, --version\tDisplay the program \[v\]ersion/m)
   end
 
   it 'ignores all options after --' do
