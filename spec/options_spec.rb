@@ -10,7 +10,7 @@ describe 'options' do
   it 'ignores all options after --' do
     expect(
       run("#{gitrflow_cmd} -- --version", out: false, exp_rc: 1)
-    ).to match(/^    --\t\tIgnore all following options/m)
+    ).to match(/^    --\t\t\tIgnore all following options/m)
   end
 
   it 'processes options after commands' do

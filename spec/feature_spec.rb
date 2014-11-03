@@ -9,6 +9,11 @@ describe 'branch type parameter' do
 end
 
 describe 'start' do
+  it 'is documented' do
+    help_text = 'feature start <branch_name>'
+    expect(run("#{gitrflow_path} -h", out: false, exp_rc: 1)).to match(/#{help_text}/)
+  end
+
   describe 'fails if' do
     it 'no branch name is specified' do
       out = run("#{gitrflow_cmd} feature start", out: false, exp_rc: 1)

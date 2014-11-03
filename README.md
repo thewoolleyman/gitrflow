@@ -69,6 +69,12 @@ to integrate and stabilize changes prior to merging them to master, then
 it's easy to just treat it as a feature branch (which is also an upstream) using
 gitrflow.
 
+## Options
+
+* `-h, --help          Display this help`
+* `-V, --version       Display the program version`
+* `--                  Ignore all following options`
+
 # Goals, and Philosophy
 
 ## Merge or rebase?
