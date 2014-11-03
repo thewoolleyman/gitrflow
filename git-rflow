@@ -102,7 +102,7 @@ function feature_start() {
   printf "%s A new branch '%s' was created, based on 'master'\n" '-' "${branch}"
   printf "%s You are now on branch '%s'\n\n" '-' "${branch}"
   printf "Now, start committing on your feature. When done, use:\n\n" '-' "${branch}"
-  printf "     git flow feature finish %s" "${branch}"
+  printf "     git flow feature finish %s\n" "${branch}"
 }
 
 ###

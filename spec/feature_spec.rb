@@ -62,7 +62,7 @@ describe 'start' do
     "- A new branch '#{branch}' was created, based on 'master'\n" \
     "- You are now on branch '#{branch}'\n\n" \
     "Now, start committing on your feature. When done, use:\n\n" \
-    "     git flow feature finish #{branch}"
+    "     git flow feature finish #{branch}\n"
 
     FileUtils.cd(local_repo) do
       cmd = "#{gitrflow_cmd} feature start #{branch}"
