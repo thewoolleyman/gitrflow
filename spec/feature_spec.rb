@@ -35,7 +35,7 @@ describe 'start' do
       local_repo, _ = make_cloned_repo([])
       FileUtils.cd(local_repo) do
         FileUtils.touch('unpushed')
-        run('git add unpushed && git ci -m "unpushed"', out: false)
+        run('git add unpushed && git commit -m "unpushed"', out: false)
         cmd = "#{gitrflow_cmd} feature start feature1"
         out = run(cmd, out: false, exp_rc: 1)
         expect(out).to match(/ERROR: Local repo is "gone". Please fix and retry./)
@@ -46,7 +46,7 @@ describe 'start' do
       local_repo, _ = make_cloned_repo
       FileUtils.cd(local_repo) do
         FileUtils.touch('unpushed')
-        run('git add unpushed && git ci -m "unpushed"', out: false)
+        run('git add unpushed && git commit -m "unpushed"', out: false)
         cmd = "#{gitrflow_cmd} feature start feature1"
         out = run(cmd, out: false, exp_rc: 1)
         expect(out).to match(/ERROR: Local repo has unpushed changes. Please fix and retry./)

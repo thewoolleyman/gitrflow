@@ -55,7 +55,7 @@ module SpecHelper
           run("echo #{contents} > #{filename}", out: false)
         end
       end
-      run('git add . && git ci -m "commit 1"', out: false) unless commits.empty?
+      run('git add . && git commit -m "commit 1"', out: false) unless commits.empty?
     end
     remote_repo_dir
   end
