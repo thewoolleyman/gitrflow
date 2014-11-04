@@ -204,6 +204,44 @@ team**.
 However, be aware that this is a tradeoff, and you are missing out on the benefits
 of a rebase workflow, and accepting the problems of a merge-based workflow.
 
+## Public / Open Source feature branches - safe to rebase?
+
+If you have a public or open source repo, and people will be pulling
+rebased **feature** branches, **AND** they don't know how to properly
+work in a rebase workflow (i.e., you can't require them to use gitrflow),
+then that would be a reason not to use a rebase workflow on that feature
+branch.
+
+**BUT**, I would ask - why are you expecting the general public or other open
+ source contributors to work on a **feature** branch?  Remember, the
+ master branch, hotfix branches, or production release branches should
+ **NOT** be rebased - because they should remain stable.
+
+ In other words, if you have a **feature** branch on a public repo, then
+ you should be able to either:
+
+ 1. Not expect anybody you don't know to be working with it (they should work
+    on master, or a hotfix branch, or a release branch, and submit patches
+    or pull requests), or...
+ 2. Expect anyone who DOES work on it to have a good reason to, and probably
+    be a core contributor or part of the development team, and thus can be
+    expected to follow a documented rebase-based workflow using gitrflow.
+
+ If you think about it, this is the same approach GitHub uses to solve the
+ same problem, but they do it via pull requests.  In the GitHub pull-request
+ based workflow, your personal **"forked"** repo is in essence your own
+ **"feature"** branch, that only you (or other trusted collaborators)
+ work on.  Thus, you are free to rebase it to your hearts content.  Then,
+ when you have it ready to merge back into the main repo (i.e. analogous
+ to the master or upstream branch in gitrflow), you submit a **pull request**,
+ which is simply a request to `merge --no-ff` your changes back into
+ the upstream branch (i.e., just like the gitrflow workflow).
+
+ So, I believe you should treat public feature branches just like any other
+ feature branch - they are OK to rebase, and if you collaborate on them concurrently
+ with anybody, you should ensure they know how to use your preferred rebase
+ workflow.
+
 ## Squash merges - they DO lose information
 
 To get around some of the drawbacks of a merge-based workflow (a proliferation
@@ -222,7 +260,7 @@ why it was changed, only to find out it's part of a commit with dozens (or hundr
 of files which changed, and a terse commit message of *"merge branch uber_epic
  into master"*.
 
-## Goals and Benefits of rebase vs. merge workflow
+## Goals and Benefits of rebase over a merge workflow
 
 TODO: flesh this out
 
@@ -258,7 +296,6 @@ TODO: flesh this out
   If you squash-merge a feature branch to master (as is often done in a merge-based
   workflow), you must immediately force-delete the branch with -D, or else manually
   ensure no subsequent commits or other changes are on the branch.
-
 
 
 # Further Reading
