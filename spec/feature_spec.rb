@@ -57,8 +57,7 @@ describe 'start' do
   it 'creates the specified feature branch' do
     local_repo, _ = make_cloned_repo
     branch = 'feature1'
-    expected_out = "Switched to a new branch '#{branch}'\n\n" \
-    "Summary of actions:\n" \
+    expected_out = "Summary of actions:\n" \
     "- A new branch '#{branch}' was created, based on 'master'\n" \
     "- You are now on branch '#{branch}'\n\n" \
     "Now, start committing on your feature. When done, use:\n\n" \

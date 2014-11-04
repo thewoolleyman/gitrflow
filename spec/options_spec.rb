@@ -37,36 +37,115 @@ describe 'options' do
     expect(out).to match(/^    -h, --help\t\tDisplay this \[h\]elp/)
   end
 
-  it '-t, --trace' do
-    local_repo, _ = make_cloned_repo
-    branch = 'feature1'
-
-    expected_out = "trace: built-in: git 'status' '--short'\n" \
-    "trace: built-in: git 'status' '--short' '--branch'\n" \
-    "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
-    "Switched to a new branch '#{branch}'\n\n" \
-    "Summary of actions:\n" \
-    "- A new branch '#{branch}' was created, based on 'master'\n" \
-    "- You are now on branch '#{branch}'\n\n" \
-    "Now, start committing on your feature. When done, use:\n\n" \
-    "     git flow feature finish #{branch}\n"
-
-    FileUtils.cd(local_repo) do
-      out = run("#{gitrflow_cmd} --trace feature start #{branch}", out: false)
-      expect(out).to eq(expected_out)
-    end
-    help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
-    expect(help_out).to match(/^    -t, --trace\t\tEnable the GIT_TRACE environment variable/)
+  describe '-c, --print-git-commands' do
+    it 'is pending'
   end
 
-  it '--version' do
-    expect(run("#{gitrflow_cmd} --version", out: false)).to match(version_regex)
-    out = run("#{gitrflow_cmd} -V", out: false)
-    expect(out).to match(version_regex)
-    expect(out).to match(version_regex)
-    expect(
-      run("#{gitrflow_cmd}", out: false, exp_rc: 1)
-    ).to match(/^    -V, --version\tDisplay the program \[v\]ersion/m)
+  describe '-o, --print-git-output' do
+    it 'has help text' do
+      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      expected_help_out = /^    -o, --print-git-output\t\tDisplay \[o\]utput from git commands/
+      expect(help_out).to match(expected_help_out)
+    end
+
+    it 'when fail_unless_repo_clean has git output' do
+      local_repo, _ = make_cloned_repo
+
+      expected_out = "?? dirty\n" \
+        "ERROR: Local repo is not clean. Please fix and retry.\n" \
+        "'git rflow --help' for usage.\n"
+
+      FileUtils.cd(local_repo) do
+        FileUtils.touch('dirty')
+        cmd = "#{gitrflow_cmd} -o feature start feature1"
+        out = run(cmd, out: false, exp_rc: 1)
+        expect(out).to eq(expected_out)
+      end
+    end
+
+    it 'when fail_if_unpushed_changes and feature_start have git output' do
+      local_repo, _ = make_cloned_repo
+      branch = 'feature1'
+
+      expected_out = "## master...origin/master\n" \
+        "Switched to a new branch '#{branch}'\n" \
+        "\n" \
+        "Summary of actions:\n" \
+        "- A new branch '#{branch}' was created, based on 'master'\n" \
+        "- You are now on branch '#{branch}'\n\n" \
+        "Now, start committing on your feature. When done, use:\n\n" \
+        "     git flow feature finish #{branch}\n"
+
+      FileUtils.cd(local_repo) do
+        out = run("#{gitrflow_cmd} --print-git-output feature start #{branch}", out: false)
+        expect(out).to eq(expected_out)
+      end
+    end
+  end
+
+  describe '-t, --trace' do
+    it 'has help text' do
+      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      expect(help_out).to match(/^    -t, --trace\t\tEnable the GIT_TRACE environment variable/)
+    end
+
+    it 'includes GIT_TRACE output' do
+      local_repo, _ = make_cloned_repo
+      branch = 'feature1'
+
+      expected_out = "trace: built-in: git 'status' '--porcelain'\n" \
+        "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
+        "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
+        "\n" \
+        "Summary of actions:\n" \
+        "- A new branch '#{branch}' was created, based on 'master'\n" \
+        "- You are now on branch '#{branch}'\n\n" \
+        "Now, start committing on your feature. When done, use:\n\n" \
+        "     git flow feature finish #{branch}\n"
+
+      FileUtils.cd(local_repo) do
+        out = run("#{gitrflow_cmd} --trace feature start #{branch}", out: false)
+        expect(out).to eq(expected_out)
+      end
+    end
+  end
+
+  describe '--version' do
+    it 'has help text' do
+      expect(
+        run("#{gitrflow_cmd} -h", out: false, exp_rc: 1)
+      ).to match(/^    -V, --version\tDisplay the program \[v\]ersion/m)
+    end
+
+    it 'shows version' do
+      expect(run("#{gitrflow_cmd} --version", out: false)).to match(version_regex)
+      out = run("#{gitrflow_cmd} -V", out: false)
+      expect(out).to match(version_regex)
+    end
+  end
+
+  describe 'option combinations' do
+    it '--print-git-output and --trace together' do
+      local_repo, _ = make_cloned_repo
+      branch = 'feature1'
+
+      expected_out = "trace: built-in: git 'status' '--porcelain'\n" \
+        "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
+        "## master...origin/master\n" \
+        "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
+        "Switched to a new branch '#{branch}'\n" \
+        "\n" \
+        "Summary of actions:\n" \
+        "- A new branch '#{branch}' was created, based on 'master'\n" \
+        "- You are now on branch '#{branch}'\n\n" \
+        "Now, start committing on your feature. When done, use:\n\n" \
+        "     git flow feature finish #{branch}\n"
+
+      FileUtils.cd(local_repo) do
+        out = run("#{gitrflow_cmd} -o -t feature start #{branch}", out: false)
+        expect(out).to eq(expected_out)
+      end
+    end
   end
 
   it 'ignores all options after --' do

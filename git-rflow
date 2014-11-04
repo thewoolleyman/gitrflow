@@ -58,51 +58,85 @@ trap onexit HUP INT QUIT TERM ERR
 ### Command Processing
 ###
 
+function exec_git() {
+  unset git_output # reset output from any previous git command
+  git_output_no_trace='' # reset output from any previous git command
+
+  git_command="${@}"
+
+  git_output=$(${git_command} 2>&1)
+
+  if [[ -n ${git_output} ]] ; then
+    handle_git_trace
+    if [[ ${print_git_output} == 'true' ]] ; then
+      echo "${git_output}"
+    fi
+  fi
+}
+
+function handle_git_trace() {
+  if [[ ${GIT_TRACE} == 1 ]] ; then # if GIT_TRACE was set...
+    if echo "${git_output}" | grep -q -v '^trace: ' ; then # if nontrace output exists
+      git_output_no_trace=$(echo "${git_output}" | grep -v '^trace: ') # assign it
+    fi
+    if [[ ${print_git_output} == 'false' ]] ; then
+      echo "${git_output}" | grep '^trace: ' # print GIT_TRACE output if other output is suppresed
+    fi
+  else
+    git_output_no_trace=${git_output} # assign if GIT_TRACE was false
+  fi
+}
+
 function run_branch_command() {
+  # declare variables with local scope to this function and all subfunctions
+  declare git_command
+  declare git_output
+  declare git_output_no_trace
+
   fail_unless_repo_clean
   fail_if_unpushed_changes
 
-  branch_type=${1}
-  command=${2}
-  branch=${3}
-
   case ${branch_type} in
     feature)
-      case ${command} in
+      case ${branch_command} in
         start)
-          feature_start "${branch}"
+          feature_start
           ;;
       esac
       ;;
   esac
-
 }
 
 function fail_unless_repo_clean() {
-  if [[ -n $(git status --short) ]] ; then
+  exec_git 'git status --porcelain'
+  if [[ -n ${git_output_no_trace} ]] ; then
     print_error_and_exit 'ERROR: Local repo is not clean. Please fix and retry.'
   fi
 }
 
 function fail_if_unpushed_changes() {
-  status_branch_output=$(git status --short --branch)
-  if [[ "${status_branch_output}" == *'[gone]'* ]] ; then
+  exec_git 'git status --porcelain --branch'
+
+  if [[ "${git_output}" == *'[gone]'* ]] ; then
     print_error_and_exit 'ERROR: Local repo is "gone". Please fix and retry.'
   fi
-  if [[ ${status_branch_output} =~ \[(ahead|behind) ]] ; then
+
+  if [[ ${git_output} =~ \[(ahead|behind) ]] ; then
     print_error_and_exit 'ERROR: Local repo has unpushed changes. Please fix and retry.'
   fi
 }
 
 function feature_start() {
-  branch=${1}
-  git checkout -b "${branch}"
-  printf "\n"
+  exec_git "git checkout -b ${branch_name}"
+
+  if [[ (${print_git_output} == 'true' || ${GIT_TRACE} == 1) && -n ${git_output} ]] ; then
+    printf "\n"
+  fi
   printf "Summary of actions:\n"
-  printf "%s A new branch '%s' was created, based on 'master'\n" '-' "${branch}"
-  printf "%s You are now on branch '%s'\n\n" '-' "${branch}"
-  printf "Now, start committing on your feature. When done, use:\n\n" '-' "${branch}"
-  printf "     git flow feature finish %s\n" "${branch}"
+  printf "%s A new branch '%s' was created, based on 'master'\n" '-' "${branch_name}"
+  printf "%s You are now on branch '%s'\n\n" '-' "${branch_name}"
+  printf "Now, start committing on your feature. When done, use:\n\n" '-' "${branch_name}"
+  printf "     git flow feature finish %s\n" "${branch_name}"
 }
 
 ###
@@ -123,6 +157,7 @@ function print_usage_and_exit() {
   printf "\n"
   printf "Options:\n"
   printf "    -h, --help\t\tDisplay this [h]elp\n"
+  printf "    -o, --print-git-output\t\tDisplay [o]utput from git commands\n"
   printf "    -t, --trace\t\tEnable the GIT_TRACE environment variable\n"
   printf "    -V, --version\tDisplay the program [v]ersion\n"
   printf "    --\t\t\tIgnore all following options\n"
@@ -148,15 +183,18 @@ function parse_options() {
     print_usage_and_exit
   fi
 
+  declare print_git_output='false'
+  export GIT_TRACE='false'
+
   # from http://mywiki.wooledge.org/BashFAQ/035
   while :; do
     case ${1} in
       feature) # Takes an option arguments, ensuring they have been specified.
-        branch_type=${1}
+        declare branch_type=${1}
         if [[ "${2}" ]]; then
-          command=$2
+          declare branch_command=$2
           if [[ "${3}" ]]; then
-            branch=$3
+            declare branch_name=$3
             shift 3
             continue
           else
@@ -168,6 +206,9 @@ function parse_options() {
         ;;
       -h|--help)
         print_usage_and_exit
+        ;;
+      -o|--print-git-output)
+        print_git_output='true'
         ;;
       -t|--trace)
         export GIT_TRACE=1
@@ -194,7 +235,7 @@ function parse_options() {
 
   set -o nounset
 
-  run_branch_command "${branch_type}" "${command}" "${branch}"
+  run_branch_command
 }
 
 function invoke() {
