@@ -1,4 +1,4 @@
-![Travis-CI Build Status](https://travis-ci.org/thewoolleyman/gitrflow.svg?branch=master)
+![Travis-CI Build Status](https://travis-ci.org/thewoolleyman/gitrflow.svg?branch=master) [Pivotal Tracker Project](https://www.pivotaltracker.com/n/projects/1205482)
 
 # gitrflow
 
