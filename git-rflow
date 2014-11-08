@@ -62,7 +62,7 @@ function exec_git() {
   unset git_output # reset output from any previous git command
   git_output_no_trace='' # reset output from any previous git command
 
-  git_command="${@}"
+  git_command="${*}"
 
   git_output=$(${git_command} 2>&1)
 
