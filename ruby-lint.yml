@@ -5,8 +5,8 @@ analysis_classes:
  - pedantics
  - shadowing_variables
 # - undefined_methods
- - undefined_variables
+# - undefined_variables
  - unused_variables
  - useless_equality_checks
 directories:
-  - spec
+ - spec

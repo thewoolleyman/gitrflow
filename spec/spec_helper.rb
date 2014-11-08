@@ -3,6 +3,16 @@ require 'open3'
 require 'tmpdir'
 require_relative 'process_helper'
 
+# RSpec config
+RSpec.configure do |c|
+  c.before(:suite) do
+    ENV['GIT_AUTHOR_NAME'] = 'gitrflow'
+    ENV['GIT_AUTHOR_EMAIL'] = 'gitrflow@example.com'
+    ENV['GIT_COMMITTER_NAME'] = 'gitrflow'
+    ENV['GIT_COMMITTER_EMAIL'] = 'gitrflow@example.com'
+  end
+end
+
 # RSpec helper methods
 module SpecHelper
   include ProcessHelper

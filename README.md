@@ -1,3 +1,5 @@
+![Travis-CI Build Status](https://travis-ci.org/thewoolleyman/gitrflow.svg?branch=master)
+
 # gitrflow
 
 Git extensions to provide high-level repository operations for a rebase-based
