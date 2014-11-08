@@ -3,7 +3,7 @@ require 'open3'
 require 'tmpdir'
 require_relative 'process_helper'
 
-# Rspec helper methods
+# RSpec helper methods
 module SpecHelper
   include ProcessHelper
 
