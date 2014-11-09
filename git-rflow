@@ -59,35 +59,34 @@ trap onexit HUP INT QUIT TERM ERR
 ###
 
 function exec_git() {
-  unset git_output # reset output from any previous git command
-  git_output_no_trace='' # reset output from any previous git command
+  unset git_trace_and_nontrace_output # reset output from any previous git command
+  git_output='' # reset output from any previous git command
 
   git_command="${*}"
 
-  git_output=$(${git_command} 2>&1)
+  git_trace_and_nontrace_output=$(${git_command} 2>&1)
 
   if [[ ${print_git_commands} == 'true' ]] ; then
     echo "${git_command}"
   fi
 
-  if [[ -n ${git_output} ]] ; then
-    handle_git_trace
-    if [[ ${print_git_output} == 'true' ]] ; then
-      echo "${git_output}"
-    fi
+  if [[ -n ${git_trace_and_nontrace_output} ]] ; then
+    handle_git_output
   fi
 }
 
-function handle_git_trace() {
+function handle_git_output() {
   if [[ ${GIT_TRACE} == 1 ]] ; then # if GIT_TRACE was set...
-    if echo "${git_output}" | grep -q -v '^trace: ' ; then # if nontrace output exists
-      git_output_no_trace=$(echo "${git_output}" | grep -v '^trace: ') # assign it
-    fi
-    if [[ ${print_git_output} == 'false' ]] ; then
-      echo "${git_output}" | grep '^trace: ' # print GIT_TRACE output if other output is suppresed
-    fi
-  else
-    git_output_no_trace=${git_output} # assign if GIT_TRACE was false
+    git_trace_output=$(echo "${git_trace_and_nontrace_output}" | grep '^trace: ') # filter and assign it
+    echo "${git_trace_output}" # print it
+  fi
+
+  if echo "${git_trace_and_nontrace_output}" | grep -q -v '^trace: ' ; then # if nontrace output exists...
+    git_output=$(echo "${git_trace_and_nontrace_output}" | grep -v '^trace: ') # filter and assign it
+  fi
+
+  if [[ ${print_git_output} == 'true' && -n ${git_output} ]] ; then
+    echo "${git_output}" # print git output if option is set
   fi
 }
 
@@ -95,7 +94,6 @@ function run_branch_command() {
   # declare variables with local scope to this function and all subfunctions
   declare git_command
   declare git_output
-  declare git_output_no_trace
 
   fail_unless_repo_clean
   fail_if_unpushed_changes
@@ -113,7 +111,7 @@ function run_branch_command() {
 
 function fail_unless_repo_clean() {
   exec_git 'git status --porcelain'
-  if [[ -n ${git_output_no_trace} ]] ; then
+  if [[ -n ${git_output} ]] ; then
     print_error_and_exit 'ERROR: Local repo is not clean. Please fix and retry.'
   fi
 }
