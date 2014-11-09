@@ -156,12 +156,13 @@ function print_usage_and_exit() {
   printf "    feature start <branch_name>\n"
   printf "\n"
   printf "Options:\n"
-  printf "    -h, --help\t\tDisplay this [h]elp\n"
-  printf "    -o, --print-git-output\t\tDisplay [o]utput from git commands\n"
-  printf "    -t, --trace\t\tEnable the GIT_TRACE environment variable\n"
-  printf "    -V, --version\tDisplay the program [v]ersion\n"
-  printf "    --\t\t\tIgnore all following options\n"
-  printf "\nSee https://github.com/thewoolleyman/gitrflow for more information."
+  printf "    -c, --print-git-commands    Print git [c]ommands as they are run\n"
+  printf "    -h, --help                  Display this [h]elp\n"
+  printf "    -o, --print-git-output      Print [o]utput from git commands\n"
+  printf "    -t, --trace                 Enable the GIT_TRACE environment variable\n"
+  printf "    -V, --version               Display the program [v]ersion\n"
+  printf "    --                          Ignore all following options\n"
+  printf "\nSee https://github.com/thewoolleyman/gitrflow for more information.\n"
   exit 1
 }
 

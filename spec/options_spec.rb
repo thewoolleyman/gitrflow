@@ -34,17 +34,22 @@ describe 'options' do
     expect(run("#{gitrflow_path} --help", out: false, exp_rc: 1)).to match(/^Usage:/)
     out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
     expect(out).to match(/^Usage:/)
-    expect(out).to match(/^    -h, --help\t\tDisplay this \[h\]elp/)
+    expect(out).to match(/^    -h, --help                  Display this \[h\]elp/)
   end
 
   describe '-c, --print-git-commands' do
-    it 'is pending'
+    it 'has help text' do
+      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      expected_help_out = /^    -c, --print-git-commands    Print git \[c\]ommands as they are run/
+      expect(help_out).to match(expected_help_out)
+    end
+
   end
 
   describe '-o, --print-git-output' do
     it 'has help text' do
       help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
-      expected_help_out = /^    -o, --print-git-output\t\tDisplay \[o\]utput from git commands/
+      expected_help_out = /^    -o, --print-git-output      Print \[o\]utput from git commands/
       expect(help_out).to match(expected_help_out)
     end
 
@@ -86,7 +91,8 @@ describe 'options' do
   describe '-t, --trace' do
     it 'has help text' do
       help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
-      expect(help_out).to match(/^    -t, --trace\t\tEnable the GIT_TRACE environment variable/)
+      expected_out = /^    -t, --trace                 Enable the GIT_TRACE environment variable/
+      expect(help_out).to match(expected_out)
     end
 
     it 'includes GIT_TRACE output' do
@@ -114,7 +120,7 @@ describe 'options' do
     it 'has help text' do
       expect(
         run("#{gitrflow_cmd} -h", out: false, exp_rc: 1)
-      ).to match(/^    -V, --version\tDisplay the program \[v\]ersion/m)
+      ).to match(/^    -V, --version               Display the program \[v\]ersion/m)
     end
 
     it 'shows version' do
@@ -151,7 +157,7 @@ describe 'options' do
   it 'ignores all options after --' do
     expect(
       run("#{gitrflow_cmd} -- --version", out: false, exp_rc: 1)
-    ).to match(/^    --\t\t\tIgnore all following options/m)
+    ).to match(/^    --                          Ignore all following options/m)
   end
 
   def version_regex
