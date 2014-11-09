@@ -66,6 +66,10 @@ function exec_git() {
 
   git_output=$(${git_command} 2>&1)
 
+  if [[ ${print_git_commands} == 'true' ]] ; then
+    echo "${git_command}"
+  fi
+
   if [[ -n ${git_output} ]] ; then
     handle_git_trace
     if [[ ${print_git_output} == 'true' ]] ; then
@@ -184,6 +188,7 @@ function parse_options() {
     print_usage_and_exit
   fi
 
+  declare print_git_commands='false'
   declare print_git_output='false'
   export GIT_TRACE='false'
 
@@ -204,6 +209,9 @@ function parse_options() {
         else
           print_error_and_exit 'ERROR: The feature branch command is required.'
         fi
+        ;;
+      -c|--print-git-commands)
+        print_git_commands='true'
         ;;
       -h|--help)
         print_usage_and_exit

@@ -44,6 +44,20 @@ describe 'options' do
       expect(help_out).to match(expected_help_out)
     end
 
+    it 'when fail_unless_repo_clean has git output' do
+      local_repo, _ = make_cloned_repo
+
+      expected_out = "git status --porcelain\n" \
+        "ERROR: Local repo is not clean. Please fix and retry.\n" \
+        "'git rflow --help' for usage.\n"
+
+      FileUtils.cd(local_repo) do
+        FileUtils.touch('dirty')
+        cmd = "#{gitrflow_cmd} -c feature start feature1"
+        out = run(cmd, out: false, exp_rc: 1)
+        expect(out).to eq(expected_out)
+      end
+    end
   end
 
   describe '-o, --print-git-output' do
@@ -149,6 +163,31 @@ describe 'options' do
 
       FileUtils.cd(local_repo) do
         out = run("#{gitrflow_cmd} -o -t feature start #{branch}", out: false)
+        expect(out).to eq(expected_out)
+      end
+    end
+
+    it '--print-git-commands and --print-git-output and --trace together' do
+      local_repo, _ = make_cloned_repo
+      branch = 'feature1'
+
+      expected_out = "git status --porcelain\n" \
+        "trace: built-in: git 'status' '--porcelain'\n" \
+        "git status --porcelain --branch\n" \
+        "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
+        "## master...origin/master\n" \
+        "git checkout -b feature1\n" \
+        "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
+        "Switched to a new branch '#{branch}'\n" \
+        "\n" \
+        "Summary of actions:\n" \
+        "- A new branch '#{branch}' was created, based on 'master'\n" \
+        "- You are now on branch '#{branch}'\n\n" \
+        "Now, start committing on your feature. When done, use:\n\n" \
+        "     git flow feature finish #{branch}\n"
+
+      FileUtils.cd(local_repo) do
+        out = run("#{gitrflow_cmd} -c -o -t feature start #{branch}", out: false)
         expect(out).to eq(expected_out)
       end
     end
