@@ -66,26 +66,26 @@ function exec_git() {
 
   git_trace_and_nontrace_output=$(${git_command} 2>&1)
 
-  if [[ ${print_git_commands} == 'true' ]] ; then
+  if [[ ${print_git_commands} == 'true' ]]; then
     echo "${git_command}"
   fi
 
-  if [[ -n ${git_trace_and_nontrace_output} ]] ; then
+  if [[ -n ${git_trace_and_nontrace_output} ]]; then
     handle_git_output
   fi
 }
 
 function handle_git_output() {
-  if [[ ${GIT_TRACE} == 1 ]] ; then # if GIT_TRACE was set...
+  if [[ ${GIT_TRACE} == 1 ]]; then # if GIT_TRACE was set...
     git_trace_output=$(echo "${git_trace_and_nontrace_output}" | grep '^trace: ') # filter and assign it
     echo "${git_trace_output}" # print it
   fi
 
-  if echo "${git_trace_and_nontrace_output}" | grep -q -v '^trace: ' ; then # if nontrace output exists...
+  if echo "${git_trace_and_nontrace_output}" | grep -q -v '^trace: '; then # if nontrace output exists...
     git_output=$(echo "${git_trace_and_nontrace_output}" | grep -v '^trace: ') # filter and assign it
   fi
 
-  if [[ ${print_git_output} == 'true' && -n ${git_output} ]] ; then
+  if [[ ${print_git_output} == 'true' && -n ${git_output} ]]; then
     echo "${git_output}" # print git output if option is set
   fi
 }
@@ -103,15 +103,15 @@ function run_branch_command() {
       case ${branch_command} in
         start)
           feature_start
-          ;;
+         ;;
       esac
-      ;;
+     ;;
   esac
 }
 
 function fail_unless_repo_clean() {
   exec_git 'git status --porcelain'
-  if [[ -n ${git_output} ]] ; then
+  if [[ -n ${git_output} ]]; then
     print_error_and_exit 'ERROR: Local repo is not clean. Please fix and retry.'
   fi
 }
@@ -119,11 +119,11 @@ function fail_unless_repo_clean() {
 function fail_if_unpushed_changes() {
   exec_git 'git status --porcelain --branch'
 
-  if [[ "${git_output}" == *'[gone]'* ]] ; then
+  if [[ "${git_output}" == *'[gone]'* ]]; then
     print_error_and_exit 'ERROR: Local repo is "gone". Please fix and retry.'
   fi
 
-  if [[ ${git_output} =~ \[(ahead|behind) ]] ; then
+  if [[ ${git_output} =~ \[(ahead|behind) ]]; then
     print_error_and_exit 'ERROR: Local repo has unpushed changes. Please fix and retry.'
   fi
 }
@@ -131,7 +131,7 @@ function fail_if_unpushed_changes() {
 function feature_start() {
   exec_git "git checkout -b ${branch_name}"
 
-  if [[ (${print_git_output} == 'true' || ${GIT_TRACE} == 1) && -n ${git_output} ]] ; then
+  if [[ (${print_git_output} == 'true' || ${GIT_TRACE} == 1) && -n ${git_output} ]]; then
     printf "\n"
   fi
   printf "Summary of actions:\n"
@@ -178,11 +178,11 @@ function parse_options() {
   set +o nounset
 
   # see http://stackoverflow.com/a/13864829/25192
-  if [[ -z "${1+x}" ]] ; then
+  if [[ -z "${1+x}" ]]; then
     print_usage_and_exit
   fi
 
-  if [[ "${1}" == '--' ]] ; then
+  if [[ "${1}" == '--' ]]; then
     print_usage_and_exit
   fi
 
@@ -207,30 +207,30 @@ function parse_options() {
         else
           print_error_and_exit 'ERROR: The feature branch command is required.'
         fi
-        ;;
+       ;;
       -c|--print-git-commands)
         print_git_commands='true'
-        ;;
+       ;;
       -h|--help)
         print_usage_and_exit
-        ;;
+       ;;
       -o|--print-git-output)
         print_git_output='true'
-        ;;
+       ;;
       -t|--trace)
         export GIT_TRACE=1
-        ;;
+       ;;
       -V|--version)
         print_version
         exit 0
-        ;;
+       ;;
       --) # ignore all following options
         shift
         break
-        ;;
+       ;;
       *)
         # see http://stackoverflow.com/a/13864829/25192
-        if [[ -z "${1+x}" ]] ; then
+        if [[ -z "${1+x}" ]]; then
           break
         else
           print_error_and_exit "ERROR: Unrecognized parameter '${1}'"
