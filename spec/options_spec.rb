@@ -61,6 +61,22 @@ describe 'options' do
     end
   end
 
+  describe '-d, --debug' do
+    it 'has help text' do
+      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      expected_help_out =
+        /^    -d, --debug                 Debug git-rflow script with bash xtrace/
+      expect(help_out).to match(expected_help_out)
+    end
+
+    it 'turns on GITRFLOW_BASH_XTRACE' do
+      cmd = "#{gitrflow_cmd} -d -h"
+      out = run(cmd, out: false, exp_rc: 1)
+      expect(out).to match(/\+\(.*git-rflow:\d+\): print_usage_and_exit\(\): printf 'Usage:\\n'/)
+      expect(out).to match(/^Usage:\n/)
+    end
+  end
+
   describe '-o, --print-git-output' do
     it 'has help text' do
       help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)

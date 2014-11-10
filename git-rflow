@@ -9,11 +9,14 @@
 
 # http://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
 
-gitrflow_bash_xtrace=${GITRFLOW_BASH_XTRACE:-false}
-if [[ ${gitrflow_bash_xtrace} == 'true' ]]; then
-  export PS4="+(\${BASH_SOURCE}:\${LINENO}): \${FUNCNAME[0]:+\${FUNCNAME[0]}(): }"
-  set -o xtrace
-fi
+function handle_gitrflow_bash_xtrace() {
+  gitrflow_bash_xtrace=${GITRFLOW_BASH_XTRACE:-false}
+  if [[ ${gitrflow_bash_xtrace} == 'true' ]]; then
+    export PS4="+(\${BASH_SOURCE}:\${LINENO}): \${FUNCNAME[0]:+\${FUNCNAME[0]}(): }"
+    set -o xtrace
+  fi
+}
+handle_gitrflow_bash_xtrace
 
 gitrflow_bash_verbose=${GITRFLOW_BASH_VERBOSE:-false}
 if [[ ${gitrflow_bash_verbose} == 'true' ]]; then
@@ -214,6 +217,7 @@ function print_usage_and_exit() {
   printf "\n"
   printf "Global options:\n"
   printf "    -c, --print-git-commands    Print git [c]ommands as they are run\n"
+  printf "    -d, --debug                 Debug git-rflow script with bash xtrace\n"
   printf "    -h, --help                  Display this [h]elp\n"
   printf "    -o, --print-git-output      Print [o]utput from git commands\n"
   printf "    -t, --trace                 Enable the GIT_TRACE environment variable\n"
@@ -276,6 +280,10 @@ function parse_options() {
         ;;
       -c|--print-git-commands)
         print_git_commands='true'
+        ;;
+      -d|--debug)
+        GITRFLOW_BASH_XTRACE='true'
+        handle_gitrflow_bash_xtrace
         ;;
       -h|--help)
         print_usage_and_exit
