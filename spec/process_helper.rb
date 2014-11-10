@@ -1,3 +1,5 @@
+require 'open3'
+
 # Helper for executing shell commands
 module ProcessHelper
   def valid_option_pairs

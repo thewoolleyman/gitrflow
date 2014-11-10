@@ -1,5 +1,4 @@
 require 'rspec'
-require 'open3'
 require 'tmpdir'
 require_relative 'process_helper'
 

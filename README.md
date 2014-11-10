@@ -358,9 +358,9 @@ therein:
   * ruby-lint
   * rubocop
 * Support for multiple Git versions
-  * Download and compile the required version of git from
-    [https://www.kernel.org/pub/software/scm/git/](https://www.kernel.org/pub/software/scm/git/)
-  * Run rspec with that version: `GIT_EXECUTABLE=/usr/local/bin/git-1.8.2.3/git rspec`
+  * Run spec/gitrflow_suite.rb
+  * Override GITRFLOW_SPEC_GIT_VERSIONS to a comma-delimited list of versions to test
+  * Or, run a local git version with: `GIT_EXECUTABLE=/path/to/git rspec`
 
 # Credits
 
