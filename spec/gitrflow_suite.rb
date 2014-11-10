@@ -12,11 +12,8 @@ class GitrflowSuite
     @gits_dir = File.expand_path('../gits', __FILE__)
     git_versions.split(',').each do |git_version|
       FileUtils.mkdir_p(@gits_dir)
-
+      p_div "Running specs with git_version #{git_version}"
       git_executable = build_git_version(git_version)
-
-      puts git_executable
-
       run_suite_for_git_version(git_executable)
     end
   end
@@ -25,7 +22,6 @@ class GitrflowSuite
 
   def build_git_version(git_version)
     FileUtils.cd(@gits_dir) do
-      p_div "Running specs with git_version #{git_version}"
       git_src_dir = "git-#{git_version}"
       git_executable = "#{git_src_dir}/git"
       git_src_file = "#{git_src_dir}.tar.gz"
