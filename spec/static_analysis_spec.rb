@@ -11,7 +11,7 @@ describe 'static analysis checks' do
     end
 
     begin
-      run("shellcheck #{gitrflow_path}", out: false, out_ex: true)
+      run("shellcheck #{gitrflow_script}", out: false, out_ex: true)
     rescue
       $stderr.puts('Shellcheck failed.  See https://github.com/koalaman/shellcheck/wiki')
       raise

@@ -28,12 +28,16 @@ module SpecHelper
     "#{File.expand_path('../../', __FILE__)}:$PATH"
   end
 
-  def gitrflow_path
+  def gitrflow_script
     File.expand_path('../../git-rflow', __FILE__)
   end
 
+  def git_executable
+    ENV['GIT_EXECUTABLE'] || 'git'
+  end
+
   def gitrflow_cmd
-    "PATH=#{path_with_gitrflow} git rflow"
+    "PATH=#{path_with_gitrflow} #{git_executable} rflow"
   end
 
   ###

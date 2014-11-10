@@ -31,15 +31,15 @@ describe 'options' do
   end
 
   it '-h, --help' do
-    expect(run("#{gitrflow_path} --help", out: false, exp_rc: 1)).to match(/^Usage:/)
-    out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+    expect(run("#{gitrflow_script} --help", out: false, exp_rc: 1)).to match(/^Usage:/)
+    out = run("#{gitrflow_script} -h", out: false, exp_rc: 1)
     expect(out).to match(/^Usage:/)
     expect(out).to match(/^    -h, --help                  Display this \[h\]elp/)
   end
 
   describe '-c, --print-git-commands' do
     it 'has help text' do
-      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      help_out = run("#{gitrflow_script} -h", out: false, exp_rc: 1)
       expected_help_out = /^    -c, --print-git-commands    Print git \[c\]ommands as they are run/
       expect(help_out).to match(expected_help_out)
     end
@@ -63,7 +63,7 @@ describe 'options' do
 
   describe '-d, --debug' do
     it 'has help text' do
-      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      help_out = run("#{gitrflow_script} -h", out: false, exp_rc: 1)
       expected_help_out =
         /^    -d, --debug                 Debug git-rflow script with bash xtrace/
       expect(help_out).to match(expected_help_out)
@@ -79,7 +79,7 @@ describe 'options' do
 
   describe '-o, --print-git-output' do
     it 'has help text' do
-      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      help_out = run("#{gitrflow_script} -h", out: false, exp_rc: 1)
       expected_help_out = /^    -o, --print-git-output      Print \[o\]utput from git commands/
       expect(help_out).to match(expected_help_out)
     end
@@ -123,7 +123,7 @@ describe 'options' do
 
   describe '-t, --trace' do
     it 'has help text' do
-      help_out = run("#{gitrflow_path} -h", out: false, exp_rc: 1)
+      help_out = run("#{gitrflow_script} -h", out: false, exp_rc: 1)
       expected_out = /^    -t, --trace                 Enable the GIT_TRACE environment variable/
       expect(help_out).to match(expected_out)
     end

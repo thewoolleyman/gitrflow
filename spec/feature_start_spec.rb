@@ -3,7 +3,7 @@ require_relative 'spec_helper'
 describe 'feature start' do
   it 'is documented' do
     help_text = 'feature start <branch_name>'
-    expect(run("#{gitrflow_path} -h", out: false, exp_rc: 1)).to match(/#{help_text}/)
+    expect(run("#{gitrflow_script} -h", out: false, exp_rc: 1)).to match(/#{help_text}/)
   end
 
   describe 'fails if' do

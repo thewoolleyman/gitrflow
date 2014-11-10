@@ -357,6 +357,10 @@ therein:
   * shellcheck
   * ruby-lint
   * rubocop
+* Support for multiple Git versions
+  * Download and compile the required version of git from
+    [https://www.kernel.org/pub/software/scm/git/](https://www.kernel.org/pub/software/scm/git/)
+  * Run rspec with that version: `GIT_EXECUTABLE=/usr/local/bin/git-1.8.2.3/git rspec`
 
 # Credits
 
