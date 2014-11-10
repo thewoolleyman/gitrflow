@@ -21,6 +21,45 @@ module SpecHelper
   # ENV['GITRFLOW_BASH_XTRACE'] = 'true'
 
   ###
+  ### helpers for git executable and versions
+  ###
+
+  def git_executable
+    ENV['GIT_EXECUTABLE'] || 'git'
+  end
+
+  def git_version
+    version_output = run("#{git_executable} --version", out: false)
+    regex = /^git version (\d)\.(\d)\.(\d).*/
+    match = regex.match(version_output)
+    {
+      major: match[1].to_i,
+      minor: match[2].to_i,
+      patch: match[3].to_i,
+    }
+  end
+
+  def git_version_has_gone_repos
+    # TODO: Not sure what version this started in, guessing >= 1.9
+    v = git_version
+    v[:major] >= 1 && v[:minor] >= 9
+  end
+
+  def git_version_status_porcelain_branch_output(
+    prefix = '##',
+    local = 'master',
+    tracking = 'origin/master'
+  )
+    # TODO: Not sure what version this changed in, guessing <= 1.8.2
+    v = git_version
+    if v[:major] <= 1 && v[:minor] <= 8 && v[:patch] <= 2
+      "#{prefix} #{local}"
+    else
+      "#{prefix} #{local}...#{tracking}"
+    end
+  end
+
+  ###
   ### helpers for local invocation of gitrflow
   ###
 
@@ -30,10 +69,6 @@ module SpecHelper
 
   def gitrflow_script
     File.expand_path('../../git-rflow', __FILE__)
-  end
-
-  def git_executable
-    ENV['GIT_EXECUTABLE'] || 'git'
   end
 
   def gitrflow_cmd

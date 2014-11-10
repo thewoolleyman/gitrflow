@@ -105,7 +105,8 @@ describe 'options' do
       branch = 'feature1'
 
       expected_out = init_defaults_output('-o') +
-        "## master...origin/master\n" \
+        git_version_status_porcelain_branch_output +
+        "\n" \
         "Switched to a new branch '#{branch}'\n" \
         "\n" \
         "Summary of actions:\n" \
@@ -171,8 +172,9 @@ describe 'options' do
 
       expected_out = init_defaults_output('-o -t') +
         "trace: built-in: git 'status' '--porcelain'\n" \
-        "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
-        "## master...origin/master\n" \
+        "trace: built-in: git 'status' '--porcelain' '--branch'\n" +
+        git_version_status_porcelain_branch_output +
+        "\n" \
         "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
         "Switched to a new branch '#{branch}'\n" \
         "\n" \
@@ -196,8 +198,9 @@ describe 'options' do
         "git status --porcelain\n" \
         "trace: built-in: git 'status' '--porcelain'\n" \
         "git status --porcelain --branch\n" \
-        "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
-        "## master...origin/master\n" \
+        "trace: built-in: git 'status' '--porcelain' '--branch'\n" +
+        git_version_status_porcelain_branch_output +
+        "\n" \
         "git checkout -b feature1\n" \
         "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
         "Switched to a new branch '#{branch}'\n" \
