@@ -53,7 +53,7 @@ module SpecHelper
   def make_cloned_repo(commits = nil)
     local_repo_dir, remote_repo_dir = make_cloned_un_gitrflow_initialized_repo(commits)
     FileUtils.cd(local_repo_dir) do
-      run('git rflow init --defaults', out: false)
+      run("#{gitrflow_cmd} init --defaults", out: false)
     end
     [local_repo_dir, remote_repo_dir]
   end
