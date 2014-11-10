@@ -21,7 +21,7 @@ describe 'options' do
     it 'prints help if no options are passed' do
       expect(
         run("#{gitrflow_cmd}", out: false, exp_rc: 1)
-      ).to match(/Usage: /m)
+      ).to match(/Usage:/m)
     end
 
     it 'processes options after commands' do
@@ -47,9 +47,10 @@ describe 'options' do
     it 'when fail_unless_repo_clean has git output' do
       local_repo, _ = make_cloned_repo
 
-      expected_out = "git status --porcelain\n" \
+      expected_out = init_defaults_output('-c') +
+        "git status --porcelain\n" \
         "ERROR: Local repo is not clean. Please fix and retry.\n" \
-        "'git rflow --help' for usage.\n"
+        "'git-rflow --help' for usage.\n"
 
       FileUtils.cd(local_repo) do
         FileUtils.touch('dirty')
@@ -70,9 +71,10 @@ describe 'options' do
     it 'when fail_unless_repo_clean has git output' do
       local_repo, _ = make_cloned_repo
 
-      expected_out = "?? dirty\n" \
+      expected_out = init_defaults_output('-o') +
+        "?? dirty\n" \
         "ERROR: Local repo is not clean. Please fix and retry.\n" \
-        "'git rflow --help' for usage.\n"
+        "'git-rflow --help' for usage.\n"
 
       FileUtils.cd(local_repo) do
         FileUtils.touch('dirty')
@@ -86,7 +88,8 @@ describe 'options' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
 
-      expected_out = "## master...origin/master\n" \
+      expected_out = init_defaults_output('-o') +
+        "## master...origin/master\n" \
         "Switched to a new branch '#{branch}'\n" \
         "\n" \
         "Summary of actions:\n" \
@@ -113,7 +116,8 @@ describe 'options' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
 
-      expected_out = "trace: built-in: git 'status' '--porcelain'\n" \
+      expected_out = init_defaults_output('-t') +
+        "trace: built-in: git 'status' '--porcelain'\n" \
         "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
         "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
         "\n" \
@@ -149,7 +153,8 @@ describe 'options' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
 
-      expected_out = "trace: built-in: git 'status' '--porcelain'\n" \
+      expected_out = init_defaults_output('-o -t') +
+        "trace: built-in: git 'status' '--porcelain'\n" \
         "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
         "## master...origin/master\n" \
         "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
@@ -171,7 +176,8 @@ describe 'options' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
 
-      expected_out = "git status --porcelain\n" \
+      expected_out = init_defaults_output('-c -o -t') +
+        "git status --porcelain\n" \
         "trace: built-in: git 'status' '--porcelain'\n" \
         "git status --porcelain --branch\n" \
         "trace: built-in: git 'status' '--porcelain' '--branch'\n" \

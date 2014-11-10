@@ -40,13 +40,31 @@ module SpecHelper
   ### support for creating local git repos for testing
   ###
 
+  def init_defaults_output(output_options)
+    opts = {}
+    output_options.split(' ').each { |o| opts[o] = true }
+    out = ''
+    out << "git config --get gitrflow.prefix.feature\n" if opts['-c']
+    out << "trace: built-in: git 'config' '--get' 'gitrflow.prefix.feature'\n" if opts['-t']
+    out << "feat/\n" if opts['-o']
+    out
+  end
+
   def make_cloned_repo(commits = nil)
-    local_repo_parent_dir = Dir.mktmpdir
-    remote_repo = make_remote_repo(commits)
-    FileUtils.cd(local_repo_parent_dir) do
-      run("git clone #{remote_repo} local_repo", out: false)
+    local_repo_dir, remote_repo_dir = make_cloned_un_gitrflow_initialized_repo(commits)
+    FileUtils.cd(local_repo_dir) do
+      run('git rflow init --defaults', out: false)
     end
-    ["#{local_repo_parent_dir}/local_repo", remote_repo]
+    [local_repo_dir, remote_repo_dir]
+  end
+
+  def make_cloned_un_gitrflow_initialized_repo(commits = nil)
+    local_repo_parent_dir = Dir.mktmpdir
+    remote_repo_dir = make_remote_repo(commits)
+    FileUtils.cd(local_repo_parent_dir) do
+      run("git clone #{remote_repo_dir} local_repo", out: false)
+    end
+    ["#{local_repo_parent_dir}/local_repo", remote_repo_dir]
   end
 
   def make_remote_repo(commits = nil)

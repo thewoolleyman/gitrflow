@@ -1,24 +1,18 @@
 # Helper for executing shell commands
 module ProcessHelper
   def valid_option_pairs
-    [
-      [
-        :expected_exit_status,
-        :exp_rc,
-      ],
-      [
-        :include_output_in_exception,
-        :out_ex,
-      ],
-      [
-        :puts_output,
-        :out,
-      ],
-      [
-        :puts_output_only_on_exception,
-        :out_only_on_ex,
-      ],
+    pairs = [
+      %w(expected_exit_status exp_rc),
+      %w(include_output_in_exception out_ex),
+      %w(input_lines in),
+      %w(puts_output out),
+      %w(puts_output_only_on_exception out_only_on_ex),
     ]
+    pairs.each do |pair|
+      pair.each_with_index do |opt, index|
+        pair[index] = opt.to_sym
+      end
+    end
   end
 
   def valid_options
@@ -78,12 +72,20 @@ module ProcessHelper
     $stderr.puts(err_msg)
   end
 
-  def get_output(stdout_and_stderr)
+  def get_output(stdin, stdout_and_stderr, input_lines)
     output = ''
+    puts_input_line_to_stdin(stdin, input_lines)
     while (line = stdout_and_stderr.gets)
       output += line
+      puts_input_line_to_stdin(stdin, input_lines)
     end
     output
+  end
+
+  def puts_input_line_to_stdin(stdin, input_lines)
+    input_line = input_lines.pop
+    return unless input_line
+    stdin.puts(input_line)
   end
 
   def handle_exit_status(cmd, options, output, wait_thr)
@@ -106,14 +108,21 @@ module ProcessHelper
     fail exception_message
   end
 
-  def process(cmd, options = {})
-    options = options.dup
+  def options_processing(options)
     validate_long_vs_short_option_uniqueness(options)
     convert_short_options(options)
     validate_option_values(options)
     ensure_output_is_shown_on_error(options)
-    Open3.popen2e(cmd) do |_, stdout_and_stderr, wait_thr|
-      output = get_output(stdout_and_stderr)
+  end
+
+  def process(cmd, options = {})
+    fail 'command must not be nil' if cmd.nil?
+    options = options.dup
+    options_processing(options)
+    input_lines = options[:input_lines] || []
+    fail 'nil entries are not allowed in input_lines' if input_lines.any?(&:nil?)
+    Open3.popen2e(cmd) do |stdin, stdout_and_stderr, wait_thr|
+      output = get_output(stdin, stdout_and_stderr, input_lines)
       puts output unless options[:puts_output] == false
 
       handle_exit_status(cmd, options, output, wait_thr)
