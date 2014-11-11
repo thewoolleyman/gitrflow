@@ -58,5 +58,8 @@ Temporary Items
 # RubyMine
 .idea
 
+# Bash build dir
+spec/bashs
+
 # Git build dir
 spec/gits

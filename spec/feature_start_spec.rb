@@ -3,12 +3,12 @@ require_relative 'spec_helper'
 describe 'feature start' do
   it 'is documented' do
     help_text = 'feature start <branch_name>'
-    expect(run("#{gitrflow_script} -h", out: false, exp_rc: 1)).to match(/#{help_text}/)
+    expect(run(gitrflow_script('-h'), out: false, exp_rc: 1)).to match(/#{help_text}/)
   end
 
   describe 'fails if' do
     it 'no branch name is specified' do
-      out = run("#{gitrflow_cmd} feature start", out: false, exp_rc: 1)
+      out = run(gitrflow_cmd('feature start'), out: false, exp_rc: 1)
       expect(out).to match(/ERROR: The feature branch name is required./)
       expect(out).to match(/'git-rflow --help' for usage./)
     end
@@ -17,7 +17,7 @@ describe 'feature start' do
       local_repo, _ = make_cloned_repo
       FileUtils.cd(local_repo) do
         FileUtils.touch('dirty')
-        cmd = "#{gitrflow_cmd} feature start feature1"
+        cmd = gitrflow_cmd('feature start feature1')
         out = run(cmd, out: false, exp_rc: 1)
         expect(out).to match(/ERROR: Local repo is not clean. Please fix and retry./)
       end
@@ -29,7 +29,7 @@ describe 'feature start' do
         FileUtils.cd(local_repo) do
           FileUtils.touch('unpushed')
           run('git add unpushed && git commit -m "unpushed"', out: false)
-          cmd = "#{gitrflow_cmd} feature start feature1"
+          cmd = gitrflow_cmd('feature start feature1')
           out = run(cmd, out: false, exp_rc: 1)
           expect(out).to match(/ERROR: Local repo is "gone". Please fix and retry./)
         end
@@ -41,7 +41,7 @@ describe 'feature start' do
       FileUtils.cd(local_repo) do
         FileUtils.touch('unpushed')
         run('git add unpushed && git commit -m "unpushed"', out: false)
-        cmd = "#{gitrflow_cmd} feature start feature1"
+        cmd = gitrflow_cmd('feature start feature1')
         out = run(cmd, out: false, exp_rc: 1)
         expect(out).to match(/ERROR: Local repo has unpushed changes. Please fix and retry./)
       end
@@ -58,7 +58,7 @@ describe 'feature start' do
       "     git flow feature finish #{branch}\n"
 
     FileUtils.cd(local_repo) do
-      cmd = "#{gitrflow_cmd} feature start #{branch}"
+      cmd = gitrflow_cmd("feature start #{branch}")
       out = run(cmd, out: false)
       expect(out).to eq(expected_out)
       git_status = run('git status', out: false)

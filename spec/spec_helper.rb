@@ -16,8 +16,17 @@ end
 module SpecHelper
   include ProcessHelper
 
-  # Uncomment to trace bash script execution
+  # Uncomment to trace complete bash script execution from very beginning,
+  # but ordinarily passing --debug option to git-rflow is sufficient
   # ENV['GITRFLOW_BASH_XTRACE'] = 'true'
+
+  ###
+  ### helpers for bash executable and versions
+  ###
+
+  def bash_executable
+    ENV['BASH_EXECUTABLE'] || 'bash'
+  end
 
   ###
   ### helpers for git executable and versions
@@ -66,12 +75,16 @@ module SpecHelper
     "#{File.expand_path('../../', __FILE__)}:$PATH"
   end
 
-  def gitrflow_script
+  def gitrflow_script_path
     File.expand_path('../../git-rflow', __FILE__)
   end
 
-  def gitrflow_cmd
-    "PATH=#{path_with_gitrflow} #{git_executable} rflow"
+  def gitrflow_script(args = '')
+    "#{bash_executable} -c '#{gitrflow_script_path} #{args}'"
+  end
+
+  def gitrflow_cmd(args = '')
+    "#{bash_executable} -c 'PATH=#{path_with_gitrflow} #{git_executable} rflow #{args}'"
   end
 
   ###
@@ -91,7 +104,7 @@ module SpecHelper
   def make_cloned_repo(commits = nil)
     local_repo_dir, remote_repo_dir = make_cloned_un_gitrflow_initialized_repo(commits)
     FileUtils.cd(local_repo_dir) do
-      run("#{gitrflow_cmd} init --defaults", out: false)
+      run(gitrflow_cmd('init --defaults'), out: false)
     end
     [local_repo_dir, remote_repo_dir]
   end
