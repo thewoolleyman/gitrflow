@@ -17,11 +17,43 @@ branches.
 * Development is still in early stage, see "Commands" section for which commands are
   implemented
 
-# Commands
+# Usage
 
 TODO: Work in progress, for now this is just a high-level description of the
 commands, they will be labeled "unimplemented", "in progress", or "implemented"
 for now.
+
+```
+Usage:
+  gitrflow [global options] init [--defaults]
+  gitrflow [global options] <branch type> <command> [command options]
+
+'init' command options:
+    --defaults                  Use defaults for init config without prompting
+
+Branch Types:
+    feature
+
+'feature' branch type commands and options:
+    feature start <branch_name>
+
+Global options:
+    -c, --print-git-commands    Print git [c]ommands as they are run
+    -d, --debug                 Debug git-rflow script with bash xtrace
+    -h, --help                  Display this [h]elp
+    -o, --print-git-output      Print [o]utput from git commands
+    -t, --trace                 Enable the GIT_TRACE environment variable
+    -V, --version               Display the program [v]ersion
+    --                          Ignore all following options
+```
+
+## Init Command (implemented for feature branch prefix)
+
+`rflow init [--defaults`: Initializes a git repo for use with gitrflow, and
+prompts you to define prefixes for different branch types.  Branch type
+prefixes are required by gitrflow to know what type of branch you are on, so that
+it can perform the proper validations and actions.  If you pass the `--default`
+option, the default branch prefixes will be automatically used with no prompting.
 
 ## Feature Branch Commands
 
@@ -65,20 +97,41 @@ production release branches and hotfix branches via merge, and there's no reason
 (AFAIK) that it couldn't be used in conjunction with gitrflow - e.g. manage
 feature branches with gitrflow, and everything else with gitflow.
 
-However, I would simplify it in some cases. E.g., I don't see the need for a
-"develop" branch in many cases, because teams with collective code ownership
-and strong test coverage and continuous integration can integrate directly
-to the master branch. Plus, if a team does find a need for a "develop" branch
-to integrate and stabilize changes prior to merging them to master, then
-it's easy to just treat it as a feature branch (which is also an upstream) using
-gitrflow.
+However, after carefully reading many articles on gitflow, and all the comments
+on them, there will be two fundamental differences in the release branch
+support in gitrflow:
 
-## Options
+1. There will be no "develop" branch.
+  * All feature and release branches will have the "master" branch as their
+    upstream.  The only purpose of the "master" branch in the gitflow workflow
+    is as a stable branch of the code with tagged versions.  But, there's no
+    reason release branches can't serve this same purpose, if tags are made on
+    the release branches themselves.
+  * Also, and more importantly, having 'develop' as the primary branch confuses
+    people, especially if they are used to a Github pull-request-based workflow,
+    and it require that you override settings in tools (such as IDEs and GitHub)
+    to specify develop as the "primary" branch.
+  * So, there's no real reason not to integrate feature and hotfix branches directly
+    to the master branch, especially for teams with collective code ownership,
+    and projects with strong test coverage and continuous integration.
+  * Plus, if a team does find a need for a "develop" branch in order to integrate
+    and stabilize changes prior to merging them to master, then it's easy to just
+    treat it as a feature branch (which is also an upstream) using
+    gitrflow.
+2. Multiple concurrent active release branches will be supported.
+  * This is one of the main complaints you see in comments on the various
+    gitflow articles.  It's very common to be required to support multiple
+    versions of production code "in the wild" - especially if you develop
+    enterprise software or tools, or pretty much anything other than a website.
+  * This limitation is a direct result of gitflow's focus on a single "master"
+    branch and a single active production release branch.  I believe that the
+    "experimental" "support" branches are intended to address this limitation,
+    but there's [little documentation on them](http://yakiloo.com/getting-started-git-flow/)
+  * But, if every release branch comes directly off of master, and is maintained
+    solely through hotfix branches, and is tagged for versioned
+    release, there's no problems with supporting any number of concurrent
+    release branches with multiple tagged semantic versions each.
 
-* `-h, --help          Display this help`
-* `-t, --trace         Enable the GIT_TRACE environment variable`
-* `-V, --version       Display the program version`
-* `--                  Ignore all following options`
 
 # Compatibility
 
