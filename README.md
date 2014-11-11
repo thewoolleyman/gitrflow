@@ -1,4 +1,6 @@
-![Travis-CI Build Status](https://travis-ci.org/thewoolleyman/gitrflow.svg?branch=master) [Pivotal Tracker Project](https://www.pivotaltracker.com/n/projects/1205482)
+[![Travis-CI Build Status](https://travis-ci.org/thewoolleyman/gitrflow.svg?branch=master)](https://travis-ci.org/thewoolleyman/gitrflow)
+
+[Pivotal Tracker Project](https://www.pivotaltracker.com/n/projects/1205482)
 
 # gitrflow
 
@@ -77,6 +79,13 @@ gitrflow.
 * `-t, --trace         Enable the GIT_TRACE environment variable`
 * `-V, --version       Display the program version`
 * `--                  Ignore all following options`
+
+# Compatibility
+
+gitrflow is fully Test-Driven via RSpec with integration coverage for all
+features, and has a Continuous Integration suite run
+[on Travis CI against multiple versions of Bash and
+Git](https://travis-ci.org/thewoolleyman/gitrflow).
 
 # Goals, and Philosophy
 

@@ -49,14 +49,14 @@ class GitrflowSuite
       lib_src_file = "#{lib_src_dir}.tar.gz"
       lib_src_url = "#{lib_src_url_prefix}#{lib_src_file}"
 
-      run("wget -q #{lib_src_url}") unless File.exist?(lib_src_file)
+      run("wget -q #{lib_src_url}", out: false) unless File.exist?(lib_src_file)
 
-      run("tar -zxf #{lib_src_file}") unless File.exist?(lib_src_dir)
+      run("tar -zxf #{lib_src_file}", out: false) unless File.exist?(lib_src_dir)
 
       unless File.exist?(lib_executable)
         FileUtils.cd(lib_src_dir) do
-          run('./configure')
-          run('make')
+          run('./configure', out: false)
+          run('make', out: false)
         end
       end
       return File.expand_path(lib_executable)
