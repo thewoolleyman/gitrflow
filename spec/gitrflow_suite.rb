@@ -8,7 +8,7 @@ class GitrflowSuite
 
   def run_suite
     bash_versions = ENV['GITRFLOW_SPEC_BASH_VERSIONS'] || '3.2.57,4.3.30'
-    git_versions = ENV['GITRFLOW_SPEC_GIT_VERSIONS'] || '1.8.2.3,1.9.3'
+    git_versions = ENV['GITRFLOW_SPEC_GIT_VERSIONS'] || '1.8.2.3,1.9.3,2.0.4,2.1.3'
 
     bash_src_url_prefix = 'http://ftp.gnu.org/gnu/bash/'
     git_src_url_prefix = 'https://www.kernel.org/pub/software/scm/git/'

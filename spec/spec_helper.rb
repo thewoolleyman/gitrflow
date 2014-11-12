@@ -97,7 +97,6 @@ module SpecHelper
     output_options.split(' ').each { |o| opts[o] = true }
     out = ''
     out << "git config --get gitrflow.prefix.feature\n" if opts['-c']
-    out << "trace: built-in: git 'config' '--get' 'gitrflow.prefix.feature'\n" if opts['-t']
     out << "feat/\n" if opts['-o']
     out
   end

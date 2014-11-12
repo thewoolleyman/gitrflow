@@ -122,35 +122,6 @@ describe 'options' do
     end
   end
 
-  describe '-t, --trace' do
-    it 'has help text' do
-      help_out = run(gitrflow_script('-h'), out: false, exp_rc: 1)
-      expected_out = /^    -t, --trace                 Enable the GIT_TRACE environment variable/
-      expect(help_out).to match(expected_out)
-    end
-
-    it 'includes GIT_TRACE output' do
-      local_repo, _ = make_cloned_repo
-      branch = 'feature1'
-
-      expected_out = init_defaults_output('-t') +
-        "trace: built-in: git 'status' '--porcelain'\n" \
-        "trace: built-in: git 'status' '--porcelain' '--branch'\n" \
-        "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
-        "\n" \
-        "Summary of actions:\n" \
-        "- A new branch '#{branch}' was created, based on 'master'\n" \
-        "- You are now on branch '#{branch}'\n\n" \
-        "Now, start committing on your feature. When done, use:\n\n" \
-        "     git flow feature finish #{branch}\n"
-
-      FileUtils.cd(local_repo) do
-        out = run(gitrflow_cmd("--trace feature start #{branch}"), out: false)
-        expect(out).to eq(expected_out)
-      end
-    end
-  end
-
   describe '--version' do
     it 'has help text' do
       expect(
@@ -166,43 +137,16 @@ describe 'options' do
   end
 
   describe 'option combinations' do
-    it '--print-git-output and --trace together' do
+    it '--print-git-commands and --print-git-output together' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
 
-      expected_out = init_defaults_output('-o -t') +
-        "trace: built-in: git 'status' '--porcelain'\n" \
-        "trace: built-in: git 'status' '--porcelain' '--branch'\n" +
-        git_version_status_porcelain_branch_output +
-        "\n" \
-        "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
-        "Switched to a new branch '#{branch}'\n" \
-        "\n" \
-        "Summary of actions:\n" \
-        "- A new branch '#{branch}' was created, based on 'master'\n" \
-        "- You are now on branch '#{branch}'\n\n" \
-        "Now, start committing on your feature. When done, use:\n\n" \
-        "     git flow feature finish #{branch}\n"
-
-      FileUtils.cd(local_repo) do
-        out = run(gitrflow_cmd("-o -t feature start #{branch}"), out: false)
-        expect(out).to eq(expected_out)
-      end
-    end
-
-    it '--print-git-commands and --print-git-output and --trace together' do
-      local_repo, _ = make_cloned_repo
-      branch = 'feature1'
-
-      expected_out = init_defaults_output('-c -o -t') +
+      expected_out = init_defaults_output('-c -o') +
         "git status --porcelain\n" \
-        "trace: built-in: git 'status' '--porcelain'\n" \
-        "git status --porcelain --branch\n" \
-        "trace: built-in: git 'status' '--porcelain' '--branch'\n" +
+        "git status --porcelain --branch\n" +
         git_version_status_porcelain_branch_output +
         "\n" \
         "git checkout -b feature1\n" \
-        "trace: built-in: git 'checkout' '-b' 'feature1'\n" \
         "Switched to a new branch '#{branch}'\n" \
         "\n" \
         "Summary of actions:\n" \
@@ -212,7 +156,7 @@ describe 'options' do
         "     git flow feature finish #{branch}\n"
 
       FileUtils.cd(local_repo) do
-        out = run(gitrflow_cmd("-c -o -t feature start #{branch}"), out: false)
+        out = run(gitrflow_cmd("-c -o feature start #{branch}"), out: false)
         expect(out).to eq(expected_out)
       end
     end

@@ -70,7 +70,6 @@ Global options:
     -d, --debug                 Debug git-rflow script with bash xtrace
     -h, --help                  Display this [h]elp
     -o, --print-git-output      Print [o]utput from git commands
-    -t, --trace                 Enable the GIT_TRACE environment variable
     -V, --version               Display the program [v]ersion
     --                          Ignore all following options
 ```
