@@ -107,11 +107,11 @@ describe 'options' do
       expected_out = init_defaults_output('-o') +
         git_version_status_porcelain_branch_output +
         "\n" \
-        "Switched to a new branch '#{branch}'\n" \
+        "Switched to a new branch 'feat/#{branch}'\n" \
         "\n" \
         "Summary of actions:\n" \
-        "- A new branch '#{branch}' was created, based on 'master'\n" \
-        "- You are now on branch '#{branch}'\n\n" \
+        "- A new Feature branch 'feat/#{branch}' was created, based on 'master'\n" \
+        "- You are now on branch 'feat/#{branch}'\n\n" \
         "Now, start committing on your feature. When done, use:\n\n" \
         "     git flow feature finish #{branch}\n"
 
@@ -146,12 +146,12 @@ describe 'options' do
         "git status --porcelain --branch\n" +
         git_version_status_porcelain_branch_output +
         "\n" \
-        "git checkout -b feature1\n" \
-        "Switched to a new branch '#{branch}'\n" \
+        "git checkout -b feat/feature1\n" \
+        "Switched to a new branch 'feat/#{branch}'\n" \
         "\n" \
         "Summary of actions:\n" \
-        "- A new branch '#{branch}' was created, based on 'master'\n" \
-        "- You are now on branch '#{branch}'\n\n" \
+        "- A new Feature branch 'feat/#{branch}' was created, based on 'master'\n" \
+        "- You are now on branch 'feat/#{branch}'\n\n" \
         "Now, start committing on your feature. When done, use:\n\n" \
         "     git flow feature finish #{branch}\n"
 

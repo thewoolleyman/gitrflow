@@ -101,10 +101,16 @@ module SpecHelper
     out
   end
 
-  def make_cloned_repo(commits = nil)
+  def make_cloned_repo(options = {})
+    commits = options[:commits]
+    init_input_lines = options[:init_input_lines]
     local_repo_dir, remote_repo_dir = make_cloned_un_gitrflow_initialized_repo(commits)
     FileUtils.cd(local_repo_dir) do
-      run(gitrflow_cmd('init --defaults'), out: false)
+      if init_input_lines
+        run(gitrflow_cmd('init'), in: init_input_lines, out: false)
+      else
+        run(gitrflow_cmd('init --defaults'), out: false)
+      end
     end
     [local_repo_dir, remote_repo_dir]
   end

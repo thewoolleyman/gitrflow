@@ -89,19 +89,15 @@ function run_branch_command() {
   # declare variables with local scope to this function and all subfunctions
   declare git_command
   declare git_output
+  declare prefixed_branch_name
 
   fail_unless_repo_clean
   fail_if_unpushed_changes
 
-  case ${branch_type} in
-    feature)
-      case ${branch_command} in
-        start)
-          feature_start
-         ;;
-      esac
-     ;;
-  esac
+  prefix="${branch_type}_prefix" # e.g. 'feature_prefix
+  # bash indirect parameter expansion: http://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+  prefixed_branch_name="${!prefix}${branch_name}" # e.g. 'feat/mybranch'
+  "${branch_type}_${branch_command}" # Invoke function, e.g. 'feature_start'
 }
 
 function fail_unless_repo_clean() {
@@ -128,39 +124,48 @@ function fail_if_unpushed_changes() {
 ###
 
 function feature_start() {
-  exec_git "git checkout -b ${branch_name}"
+  exec_git "git checkout -b ${prefixed_branch_name}"
 
   if [[ -n ${git_output} && ${print_git_output} == 'true' ]]; then
     printf "\n"
   fi
   printf "Summary of actions:\n"
-  printf "%s A new branch '%s' was created, based on 'master'\n" '-' "${branch_name}"
-  printf "%s You are now on branch '%s'\n\n" '-' "${branch_name}"
-  printf "Now, start committing on your feature. When done, use:\n\n" '-' "${branch_name}"
+  printf "%s A new Feature branch '%s' was created, based on 'master'\n" '-' "${prefixed_branch_name}"
+  printf "%s You are now on branch '%s'\n\n" '-' "${prefixed_branch_name}"
+  printf "Now, start committing on your feature. When done, use:\n\n"
   printf "     git flow feature finish %s\n" "${branch_name}"
+}
+
+###
+### Config handling
+###
+
+function load_config_or_fail() {
+  declare config_loaded='true'
+  load_config
+  if [[ ! ${config_loaded} == 'true' ]]; then
+    print_error_and_exit 'ERROR: Not a gitrflow-enabled repo yet. Please run "git rflow init [--defaults]" first.'
+  fi
+}
+
+function load_config() {
+	load_prefixes
+}
+
+function load_prefixes() {
+  # Note: disable shellcheck SC2034 unused variable warning, because the [branch_type]_prefix
+  # variables are used in run_branch_command() via bash indirect parameter expansion
+	if ! exec_git 'git config --get gitrflow.prefix.feature'; then
+    config_loaded='false'
+  else
+    # shellcheck disable=SC2034
+    feature_prefix="${git_output}"
+  fi
 }
 
 ###
 ### Init handling
 ###
-
-function fail_unless_repo_initialized() {
-  declare repo_initialized='true'
-  verify_repo_initialized
-  if [[ ! ${repo_initialized} == 'true' ]]; then
-    print_error_and_exit 'ERROR: Not a gitrflow-enabled repo yet. Please run "git rflow init [--defaults]" first.'
-  fi
-}
-
-function verify_repo_initialized() {
-	verify_prefixes_configured
-}
-
-function verify_prefixes_configured() {
-	if ! exec_git 'git config --get gitrflow.prefix.feature'; then
-    repo_initialized='false'
-  fi
-}
 
 function run_init_command() {
   prefix='feat/'
@@ -228,10 +233,14 @@ function parse_options() {
     print_usage_and_exit
   fi
 
+  # flags
   declare do_init='false'
   declare do_init_use_defaults='false'
   declare print_git_commands='false'
   declare print_git_output='false'
+
+  # config
+  declare feature_prefix
 
   # from http://mywiki.wooledge.org/BashFAQ/035
   while :; do
@@ -300,7 +309,7 @@ function parse_options() {
     exit 0
   fi
 
-  fail_unless_repo_initialized
+  load_config_or_fail
 
   run_branch_command
 }

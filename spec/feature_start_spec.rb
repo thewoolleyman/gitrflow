@@ -25,7 +25,7 @@ describe 'feature start' do
 
     it 'local repo is "gone"' do
       if git_version_has_gone_repos
-        local_repo, _ = make_cloned_repo([])
+        local_repo, _ = make_cloned_repo(commits: [])
         FileUtils.cd(local_repo) do
           FileUtils.touch('unpushed')
           run('git add unpushed && git commit -m "unpushed"', out: false)
@@ -48,21 +48,41 @@ describe 'feature start' do
     end
   end
 
-  it 'creates the specified feature branch' do
-    local_repo, _ = make_cloned_repo
-    branch = 'feature1'
-    expected_out = "Summary of actions:\n" \
-      "- A new branch '#{branch}' was created, based on 'master'\n" \
-      "- You are now on branch '#{branch}'\n\n" \
+  describe 'creates the specified feature branch' do
+    it 'with default branch prefix' do
+      local_repo, _ = make_cloned_repo
+      branch = 'feature1'
+      expected_out = "Summary of actions:\n" \
+      "- A new Feature branch 'feat/#{branch}' was created, based on 'master'\n" \
+      "- You are now on branch 'feat/#{branch}'\n\n" \
       "Now, start committing on your feature. When done, use:\n\n" \
       "     git flow feature finish #{branch}\n"
 
-    FileUtils.cd(local_repo) do
-      cmd = gitrflow_cmd("feature start #{branch}")
-      out = run(cmd, out: false)
-      expect(out).to eq(expected_out)
-      git_status = run('git status', out: false)
-      expect(git_status).to match(/On branch #{branch}/)
+      FileUtils.cd(local_repo) do
+        cmd = gitrflow_cmd("feature start #{branch}")
+        out = run(cmd, out: false)
+        expect(out).to eq(expected_out)
+        git_status = run('git status', out: false)
+        expect(git_status).to match(/On branch feat\/#{branch}/)
+      end
+    end
+
+    it 'with a custom branch prefix' do
+      local_repo, _ = make_cloned_repo(init_input_lines: ['f/'])
+      branch = 'feature1'
+      expected_out = "Summary of actions:\n" \
+      "- A new Feature branch 'f/#{branch}' was created, based on 'master'\n" \
+      "- You are now on branch 'f/#{branch}'\n\n" \
+      "Now, start committing on your feature. When done, use:\n\n" \
+      "     git flow feature finish #{branch}\n"
+
+      FileUtils.cd(local_repo) do
+        cmd = gitrflow_cmd("feature start #{branch}")
+        out = run(cmd, out: false)
+        expect(out).to eq(expected_out)
+        git_status = run('git status', out: false)
+        expect(git_status).to match(/On branch f\/#{branch}/)
+      end
     end
   end
 end
