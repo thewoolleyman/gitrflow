@@ -1,5 +1,6 @@
 ---
 script: bundle exec spec/gitrflow_suite.rb
+sudo: false
 cache:
   directories:
   - vendor/bundle
