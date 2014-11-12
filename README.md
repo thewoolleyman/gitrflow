@@ -20,6 +20,11 @@ branches.
     * [rflow feature publish](#rflow-feature-publish)
     * [rflow feature finish](#rflow-feature-finish)
   * [Release Branch Commands](#release-branch-commands)
+    * [rflow release start](#rflow-release-start)
+    * [rflow release tag](#rflow-release-tag)
+  * [Hotfix Branch Commands](#hotfix-branch-commands)
+    * [rflow hotfix start](#rflow-hotfix-start)
+    * [rflow hotfix finish](#rflow-hotfix-finish)
 * [Compatibility](#compatibility)
 * [Goals, and Philosophy](readme/goals_and_philosophy.md)
   * [Merge or rebase?](readme/goals_and_philosophy.md#merge-or-rebase)
@@ -122,8 +127,6 @@ the upstream branch.
 
 ## Release Branch Commands
 
-**(unimplemented)**
-
 "Production" release branches should never have their history rewritten by rebase,
 because their previous history **is** very important to preserve. So, the
 `merge --no-ff` command is used to manage the production release branches.
@@ -138,7 +141,7 @@ production release branches and hotfix branches via merge, and there's no reason
 feature branches with gitrflow, and everything else with gitflow.
 
 However, after carefully reading many articles on gitflow, and all the comments
-on them, there will be two fundamental differences in the release branch
+on them, there will be some fundamental differences in the release branch
 support in gitrflow:
 
 1. There will be no "develop" branch.
@@ -171,6 +174,69 @@ support in gitrflow:
     solely through hotfix branches, and is tagged for versioned
     release, there's no problems with supporting any number of concurrent
     release branches with multiple tagged semantic versions each.
+3. All changes to a release branch must be done via "hotfix" branches, or else
+   manually cherry-picked back to master.
+  * This is required in order to reliably support the approach where release
+    branches exist concurrently and "are never finished" (see next point).
+4. Release branches are never "finished"
+  * Since there's no separate develop/master branch, there's no need to
+    "finish" a release branch and merge it back anywhere.  As long as all
+    changes to the release branch are managed via hotfix branches or
+    by manually cherry-picking commits from the release branch to master
+    (see previous point), they "live forever" and are never "finished"
+
+### rflow release start
+
+**(unimplemented)**
+
+`rflow release start <release branch name> [BASE]`: creates a new release branch off
+of master, optionally starting from the BASE commit.
+
+### rflow release tag
+
+**(unimplemented)**
+
+`rflow release tag <release branch name> <tag name>`: creates a new tag on a
+release branch with the specified tag name, and automatically pushes it.
+
+
+## Hotfix Branch Commands
+
+**(unimplemented)**
+
+"hotfix" branches are used to make fixes which need to be incorporated
+into one or more existing release branches, and also back into master
+to ensure that the fix is incorporated into any future releases.
+
+Then, the release branch(es) can be independently (and individually)
+tagged as appropriate using `rflow release tag`.
+
+Note that in gitrflow, hotfix branches are also handled differently than
+in gitflow, because:
+
+1. They are not tied to a specific release version or tag
+2. They can be applied to multiple release branches
+
+### rflow hotfix start
+
+**(unimplemented)**
+
+`rflow hotfix start <hotfix branch name> <release branch name>`: creates a new hotfix
+branch off of the specified release branch.
+
+### rflow hotfix finish
+
+**(unimplemented)**
+
+`rflow hotfix finish <hotfix branch name> [<additional release branch names> ...]`:
+merges the specified hotfix branch name back into the release branch it was
+originally branched from and into master, and optionally into one or more additional
+release branches.  Then, the hotfix branch is deleted (TODO: "archived")
+
+NOTE that this **can result in merge-conflict-resolving commits being committed**,
+since master and release branches are never normally rebased.  See
+"[When committing merge conflicts is unavoidable](readme/goals_and_philosophy.md#when-committing-merge-conflicts-is-unavoidable)"
+for more information.
 
 
 # Compatibility
