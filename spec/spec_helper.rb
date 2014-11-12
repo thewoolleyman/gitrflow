@@ -17,7 +17,8 @@ module SpecHelper
   include ProcessHelper
 
   # Uncomment to trace complete bash script execution from very beginning,
-  # but ordinarily passing --debug option to git-rflow is sufficient
+  # but ordinarily passing --debug option to git-rflow is sufficient.
+  # Or, set from command line and debug focused spec with `rspec --example '...'`
   # ENV['GITRFLOW_BASH_XTRACE'] = 'true'
 
   ###

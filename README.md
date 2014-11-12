@@ -264,6 +264,9 @@ therein:
   * `GITRFLOW_SPEC_GIT_VERSIONS=2.1.3 GITRFLOW_SPEC_BASH_VERSIONS=4.3.30 spec/gitrflow_suite.rb`
 * Continuous Integration runs on Travis CI against all supported
   Bash and Git versions: [![Travis-CI Build Status](https://travis-ci.org/thewoolleyman/gitrflow.svg?branch=master)](https://travis-ci.org/thewoolleyman/gitrflow)
+* For verbose bash debugging, set GITRFLOW_BASH_XTRACE=true (note this will cause
+  specs to fail, as they test against stdout, but it is useful to see exactly what
+  the git-rflow script is doing, and why it is failing)
 
 
 # Credits
