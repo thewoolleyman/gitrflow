@@ -11,6 +11,7 @@
   * [Considerations](#considerations)
 * [Public / Open Source feature branches - safe to rebase?](#public--open-source-feature-branches---safe-to-rebase)
 * [Squash merges - they DO lose information](#squash-merges---they-do-lose-information)
+* [When committing merge conflicts is unavoidable](#when-committing-merge-conflicts-is-unavoidable)
 * [Goals and Benefits of rebase over a merge workflow](#goals-and-benefits-of-rebase-over-a-merge-workflow)
 
 ## Merge or rebase?
@@ -193,7 +194,31 @@ reasons.
 In other words, it's very frustrating to do a `git blame` on a line to find out
 why it was changed, only to find out it's part of a commit with dozens (or hundreds)
 of files which changed, and a terse commit message of *"merge branch uber_epic
- into master"*.
+into master"*.
+
+## When committing merge conflicts is unavoidable
+
+*(Note: this section is **NOT** referring to merges with `--no-ff` which
+do **NOT** resolve merge conflicts - that's done normally, every time that
+`gitrflow feature finish` is used to merge a feature branch into master,
+and also on github pull requests)*
+
+The only time it might be unavoidable to make a merge-conflict-resolving commit
+is when merging a *'hotfix'* branch into the master and release branch(es).
+
+This is because master and the release branches should ordinarily never be
+rebased (as feature branches are).  Therefore, it is possible for a hotfix
+branch to introduce a conflict which is unresolvable without making a merge
+commit which resolves the conflict.
+
+Of course, you might still decide it is safe to do a rebase of master or
+a release branch in this case if you think it's safe.  E.g., if you
+know nobody else uses master or can be trusted to properly reset it, or if
+you have not yet made any tags on a release branch, and thus know it's
+safe to rebase.  Just be aware this will involve ensuring everyone/everywhere
+with a local copy of the branches will need to fetch and
+`reset --hard origin/branch` in order to get the changes (and ensure subsequent
+gitrflow operations on these branches still operate properly).
 
 ## Goals and Benefits of rebase over a merge workflow
 

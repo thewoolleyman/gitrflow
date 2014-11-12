@@ -31,6 +31,7 @@ branches.
     * [Considerations](readme/goals_and_philosophy.md#considerations)
   * [Public / Open Source feature branches - safe to rebase?](readme/goals_and_philosophy.md#public--open-source-feature-branches---safe-to-rebase)
   * [Squash merges - they DO lose information](readme/goals_and_philosophy.md#squash-merges---they-do-lose-information)
+  * [When committing merge conflicts is unavoidable](readme/goals_and_philosophy.md#when-committing-merge-conflicts-is-unavoidable)
   * [Goals and Benefits of rebase over a merge workflow](readme/goals_and_philosophy.md#goals-and-benefits-of-rebase-over-a-merge-workflow)
 * [Further Reading](#further-reading)
 * [Glossary](#glossary)
@@ -190,6 +191,7 @@ Git](https://travis-ci.org/thewoolleyman/gitrflow).
   * [Considerations](readme/goals_and_philosophy.md#considerations)
 * [Public / Open Source feature branches - safe to rebase?](readme/goals_and_philosophy.md#public--open-source-feature-branches---safe-to-rebase)
 * [Squash merges - they DO lose information](readme/goals_and_philosophy.md#squash-merges---they-do-lose-information)
+* [When committing merge conflicts is unavoidable](readme/goals_and_philosophy.md#when-committing-merge-conflicts-is-unavoidable)
 * [Goals and Benefits of rebase over a merge workflow](readme/goals_and_philosophy.md#goals-and-benefits-of-rebase-over-a-merge-workflow)
 
 
