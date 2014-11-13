@@ -1,10 +1,7 @@
 ---
 script: bundle exec spec/gitrflow_suite.rb
-#sudo: false
+sudo: false
 cache:
   directories:
   - vendor/bundle
   - spec/gits
-before_install:
-  - wget http://security.ubuntu.com/ubuntu/pool/universe/s/shellcheck/shellcheck_0.3.3-1~ubuntu14.04.1_amd64.deb
-  - sudo dpkg -i shellcheck_0.3.3-1~ubuntu14.04.1_amd64.deb

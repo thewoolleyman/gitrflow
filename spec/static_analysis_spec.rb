@@ -2,16 +2,27 @@ require_relative 'spec_helper'
 
 describe 'static analysis checks' do
   it 'shellcheck' do
+    shellcheck_executable = nil
     begin
+      # check on path
       run('which shellcheck', out: false, out_ex: true)
+      shellcheck_executable = 'shellcheck'
     rescue
-      pending 'Unable to run shellcheck.  See http://www.shellcheck.net/about.html ' \
-                'or on OSX, install via `brew insetall shellcheck`'
-      raise
+      begin
+        # see if linux version works (i.e. if we're on linux)
+        linux_exe = File.expand_path('../../spec/shellcheck/linux_x86-64/shellcheck', __FILE__)
+        run("#{linux_exe} --version", out: false, out_ex: true)
+        shellcheck_executable = linux_exe
+      rescue
+        pending 'Unable to run shellcheck.  See http://www.shellcheck.net/about.html ' \
+                  'or on OSX, install via `brew insetall shellcheck`, ' \
+                  'or on Linux, try the included binary at spec/shellcheck/linux_x86-64'
+        raise
+      end
     end
 
     begin
-      run("shellcheck #{gitrflow_script_path}", out: false, out_ex: true)
+      run("#{shellcheck_executable} #{gitrflow_script_path}", out: false, out_ex: true)
     rescue
       $stderr.puts('Shellcheck failed.  See https://github.com/koalaman/shellcheck/wiki')
       raise
