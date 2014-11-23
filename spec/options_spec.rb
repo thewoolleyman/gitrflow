@@ -104,20 +104,11 @@ describe 'options' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
 
-      expected_out = init_defaults_output('-o') +
-        git_version_status_porcelain_branch_output +
-        "\n" \
-        "Switched to a new branch 'feat/#{branch}'\n" \
-        "\n" \
-        "Summary of actions:\n" \
-        "- A new Feature branch 'feat/#{branch}' was created, based on 'master'\n" \
-        "- You are now on branch 'feat/#{branch}'\n\n" \
-        "Now, start committing on your feature. When done, use:\n\n" \
-        "     git flow feature finish #{branch}\n"
-
       FileUtils.cd(local_repo) do
         out = run(gitrflow_cmd("--print-git-output feature start #{branch}"), out: false)
-        expect(out).to eq(expected_out)
+        expect(out).to match(/#{Regexp.escape(init_defaults_output('-o'))}/)
+        expect(out).to match(/#{Regexp.escape(git_version_status_porcelain_branch_output)}/)
+        expect(out).to match(/#{Regexp.escape("Switched to a new branch 'feat/#{branch}'\n")}/)
       end
     end
   end
@@ -141,23 +132,12 @@ describe 'options' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
 
-      expected_out = init_defaults_output('-c -o') +
-        "git status --porcelain\n" \
-        "git status --porcelain --branch\n" +
-        git_version_status_porcelain_branch_output +
-        "\n" \
-        "git checkout -b feat/feature1\n" \
-        "Switched to a new branch 'feat/#{branch}'\n" \
-        "\n" \
-        "Summary of actions:\n" \
-        "- A new Feature branch 'feat/#{branch}' was created, based on 'master'\n" \
-        "- You are now on branch 'feat/#{branch}'\n\n" \
-        "Now, start committing on your feature. When done, use:\n\n" \
-        "     git flow feature finish #{branch}\n"
-
       FileUtils.cd(local_repo) do
         out = run(gitrflow_cmd("-c -o feature start #{branch}"), out: false)
-        expect(out).to eq(expected_out)
+        expect(out).to match(/#{Regexp.escape(init_defaults_output('-c -o'))}/)
+        expect(out).to match(/#{Regexp.escape(git_version_status_porcelain_branch_output)}/)
+        expect(out).to match(/#{Regexp.escape("git checkout -b feat/feature1\n")}/)
+        expect(out).to match(/#{Regexp.escape("Switched to a new branch 'feat/#{branch}'\n")}/)
       end
     end
   end

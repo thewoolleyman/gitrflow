@@ -74,6 +74,7 @@ function exec_git() {
 
   if [[ -n ${git_output} && ${print_git_output} == 'true' ]]; then
     echo "${git_output}" # print git output if option is set
+    git_had_output='true'
   fi
 
   if [[ ! ${git_command_exit_status} == 0 ]]; then
@@ -125,12 +126,14 @@ function fail_if_unpushed_changes() {
 
 function feature_start() {
   exec_git "git checkout -b ${prefixed_branch_name}"
+  exec_git "git push origin ${prefixed_branch_name}"
 
-  if [[ -n ${git_output} && ${print_git_output} == 'true' ]]; then
+  if [[ ${git_had_output} == 'true' ]]; then
     printf "\n"
   fi
   printf "Summary of actions:\n"
   printf "%s A new Feature branch '%s' was created, based on 'master'\n" '-' "${prefixed_branch_name}"
+  printf "%s It is pushed to the remote 'origin', with a tracking branch of 'origin/%s'\n" '-' "${prefixed_branch_name}"
   printf "%s You are now on branch '%s'\n\n" '-' "${prefixed_branch_name}"
   printf "Now, start committing on your feature. When done, use:\n\n"
   printf "     git flow feature finish %s\n" "${branch_name}"
@@ -238,6 +241,7 @@ function parse_options() {
   declare do_init_use_defaults='false'
   declare print_git_commands='false'
   declare print_git_output='false'
+  declare git_had_output='false'
 
   # config
   declare feature_prefix

@@ -48,12 +48,15 @@ describe 'feature start' do
     end
   end
 
-  describe 'creates the specified feature branch' do
+  describe 'creates the specified feature branch and pushes to remote' do
     it 'with default branch prefix' do
       local_repo, _ = make_cloned_repo
       branch = 'feature1'
+      prefixed_branch = "feat/#{branch}"
       expected_out = "Summary of actions:\n" \
       "- A new Feature branch 'feat/#{branch}' was created, based on 'master'\n" \
+      "- It is pushed to the remote 'origin', " \
+        "with a tracking branch of 'origin/feat/#{branch}'\n" \
       "- You are now on branch 'feat/#{branch}'\n\n" \
       "Now, start committing on your feature. When done, use:\n\n" \
       "     git flow feature finish #{branch}\n"
@@ -63,7 +66,10 @@ describe 'feature start' do
         out = run(cmd, out: false)
         expect(out).to eq(expected_out)
         git_status = run('git status', out: false)
-        expect(git_status).to match(/On branch feat\/#{branch}/)
+        expect(git_status).to match(/On branch #{prefixed_branch}/)
+        local_sha = run('git log --pretty=format:%H', out: false)
+        remote_sha = run("git log --pretty=format:%H origin/#{prefixed_branch}", out: false)
+        expect(remote_sha).to eq(local_sha)
       end
     end
 
@@ -72,6 +78,8 @@ describe 'feature start' do
       branch = 'feature1'
       expected_out = "Summary of actions:\n" \
       "- A new Feature branch 'f/#{branch}' was created, based on 'master'\n" \
+      "- It is pushed to the remote 'origin', " \
+        "with a tracking branch of 'origin/f/#{branch}'\n" \
       "- You are now on branch 'f/#{branch}'\n\n" \
       "Now, start committing on your feature. When done, use:\n\n" \
       "     git flow feature finish #{branch}\n"
