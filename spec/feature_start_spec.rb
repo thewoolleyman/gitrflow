@@ -36,7 +36,7 @@ describe 'feature start' do
       end
     end
 
-    it 'local repo has unpushed changes' do
+    it 'local branch has unpushed changes' do
       local_repo, _ = make_cloned_repo
       FileUtils.cd(local_repo) do
         FileUtils.touch('unpushed')
@@ -44,6 +44,23 @@ describe 'feature start' do
         cmd = gitrflow_cmd('feature start feature1')
         out = run(cmd, out: false, exp_rc: 1)
         expect(out).to match(/ERROR: Local repo has unpushed changes. Please fix and retry./)
+      end
+    end
+
+    it 'local branch is behind remote' do
+      local_repo, remote_repo = make_cloned_repo
+
+      FileUtils.cd(remote_repo) do
+        FileUtils.touch('unpulled')
+        run('git add unpulled && git commit -m "unpulled"', out: false)
+      end
+
+      FileUtils.cd(local_repo) do
+        cmd = gitrflow_cmd('feature start feature1')
+        out = run(cmd, out: false, exp_rc: 1)
+        msg = 'ERROR: Local repo is behind remote. ' \
+          "Please run 'git rflow update' to pull remote updates, then retry."
+        expect(out).to match(/#{msg}/)
       end
     end
   end

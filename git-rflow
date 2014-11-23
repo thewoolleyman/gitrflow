@@ -74,7 +74,7 @@ function exec_git() {
 
   if [[ -n ${git_output} && ${print_git_output} == true ]]; then
     echo "${git_output}" # print git output if option is set
-    git_had_output=true
+    git_output_to_print=true
   fi
 
   if [[ ! ${git_command_exit_status} == 0 ]]; then
@@ -88,17 +88,34 @@ function exec_git() {
 
 function run_branch_command() {
   # declare variables with local scope to this function and all subfunctions
+  local starting_branch
   local git_command
   local git_output
   local prefixed_branch_name
 
-  fail_unless_repo_clean
-  fail_if_unpushed_changes
+  fail_unless_local_repo_is_pristine
 
   prefix="${branch_type}_prefix" # e.g. 'feature_prefix
   # bash indirect parameter expansion: http://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
   prefixed_branch_name="${!prefix}${branch_name}" # e.g. 'feat/mybranch'
   "${branch_type}_${branch_command}" # Invoke function, e.g. 'feature_start'
+}
+
+function fail_unless_local_repo_is_pristine() {
+  fail_unless_repo_clean
+
+  fail_if_repo_gone
+
+  exec_git "git rev-parse --abbrev-ref HEAD"
+  starting_branch=${git_output}
+  current_branch=${starting_branch}
+  fetch_current_branch
+
+  exec_git 'git status --porcelain --branch'
+  local git_status_output=${git_output}
+
+  fail_if_unpushed_changes
+  fail_if_unpulled_changes
 }
 
 function fail_unless_repo_clean() {
@@ -108,15 +125,26 @@ function fail_unless_repo_clean() {
   fi
 }
 
-function fail_if_unpushed_changes() {
+function fail_if_repo_gone() {
   exec_git 'git status --porcelain --branch'
-
-  if [[ "${git_output}" == *'[gone]'* ]]; then
+  if [[ ${git_output} == *'[gone]'* ]]; then
     print_error_and_exit 'ERROR: Local repo is "gone". Please fix and retry.'
   fi
+}
 
-  if [[ ${git_output} =~ \[(ahead|behind) ]]; then
+function fetch_current_branch() {
+  exec_git "git fetch -q ${remote} ${current_branch}"
+}
+
+function fail_if_unpushed_changes() {
+  if [[ ${git_status_output} =~ \[(ahead) ]]; then
     print_error_and_exit 'ERROR: Local repo has unpushed changes. Please fix and retry.'
+  fi
+}
+
+function fail_if_unpulled_changes() {
+  if [[ ${git_status_output} =~ \[(behind) ]]; then
+    print_error_and_exit "ERROR: Local repo is behind remote. Please run 'git rflow update' to pull remote updates, then retry."
   fi
 }
 
@@ -126,14 +154,16 @@ function fail_if_unpushed_changes() {
 
 function feature_start() {
   exec_git "git checkout -b ${prefixed_branch_name}"
-  exec_git "git push origin ${prefixed_branch_name}"
+  exec_git "git push ${remote} ${prefixed_branch_name}"
 
-  if ${git_had_output}; then
+  if ${git_output_to_print}; then
     printf "\n"
   fi
   printf "Summary of actions:\n"
-  printf "%s A new Feature branch '%s' was created, based on 'master'\n" '-' "${prefixed_branch_name}"
-  printf "%s It is pushed to the remote 'origin', with a tracking branch of 'origin/%s'\n" '-' "${prefixed_branch_name}"
+  printf "%s A new Feature branch '%s' was created, based on 'master'\n" \
+    '-' "${prefixed_branch_name}"
+  printf "%s It is pushed to the remote '%s', with a tracking branch of 'origin/%s'\n" \
+    '-' "${remote}" "${prefixed_branch_name}"
   printf "%s You are now on branch '%s'\n\n" '-' "${prefixed_branch_name}"
   printf "Now, start committing on your feature. When done, use:\n\n"
   printf "     git flow feature finish %s\n" "${branch_name}"
@@ -147,7 +177,8 @@ function load_config_or_fail() {
   local config_loaded='true'
   load_config
   if [[ ! ${config_loaded} == 'true' ]]; then
-    print_error_and_exit 'ERROR: Not a gitrflow-enabled repo yet. Please run "git rflow init [--defaults]" first.'
+    print_error_and_exit \
+      'ERROR: Not a gitrflow-enabled repo yet. Please run "git rflow init [--defaults]" first.'
   fi
 }
 
@@ -239,9 +270,10 @@ function parse_options() {
   # flags
   local do_init=false
   local do_init_use_defaults=false
+  local git_output_to_print=false
   local print_git_commands=false
   local print_git_output=false
-  local git_had_output=false
+  local remote='origin'
 
   # config
   local feature_prefix
