@@ -94,9 +94,11 @@ option, the default branch prefixes will be automatically used with no prompting
 
 **(unimplemented)**
 
-`rflow update`: For master, does a pull.  For feature branches, pulls the current
+`rflow update`: For feature branches, pulls the current
 feature branch from the remote, then rebases it onto the tip of the upstream branch
-(currently, only master is supported as an upstream).
+(currently, only master is supported as an upstream).  For master and all other non-feature
+branches, does a pull.  Always first verifies local working copy is clean with no unpushed
+changes.
 
 ## Feature Branch Commands
 
