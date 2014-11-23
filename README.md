@@ -14,9 +14,9 @@ branches.
 * [Installing](#installing)
 * [Usage](#usage)
   * [Init Command](#init-command)
+  * [Update Command](#update-command)
   * [Feature Branch Commands](#feature-branch-commands)
     * [rflow feature start](#rflow-feature-start)
-    * [rflow feature update](#rflow-feature-update)
     * [rflow feature publish](#rflow-feature-publish)
     * [rflow feature finish](#rflow-feature-finish)
   * [Release Branch Commands](#release-branch-commands)
@@ -90,6 +90,14 @@ prefixes are required by gitrflow to know what type of branch you are on, so tha
 it can perform the proper validations and actions.  If you pass the `--default`
 option, the default branch prefixes will be automatically used with no prompting.
 
+## Update Command
+
+**(unimplemented)**
+
+`rflow update`: For master, does a pull.  For feature branches, pulls the current
+feature branch from the remote, then rebases it onto the tip of the upstream branch
+(currently, only master is supported as an upstream).
+
 ## Feature Branch Commands
 
 ### rflow feature start
@@ -98,13 +106,6 @@ option, the default branch prefixes will be automatically used with no prompting
 
 `rflow feature start <feature branch name>`: creates a new feature branch off of the
 current branch, which is then considered the "upstream" of the feature branch.
-
-### rflow feature update
-
-**(unimplemented)**
-
-`rflow feature update`: rebases the current feature branch onto the tip of the upstream
-branch.
 
 ### rflow feature publish
 
