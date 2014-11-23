@@ -68,13 +68,13 @@ function exec_git() {
 
   git_output=$(${git_command} 2>&1)
   git_command_exit_status=$?
-  if [[ ${print_git_commands} == 'true' ]]; then
+  if ${print_git_commands}; then
     echo "${git_command}"
   fi
 
-  if [[ -n ${git_output} && ${print_git_output} == 'true' ]]; then
+  if [[ -n ${git_output} && ${print_git_output} == true ]]; then
     echo "${git_output}" # print git output if option is set
-    git_had_output='true'
+    git_had_output=true
   fi
 
   if [[ ! ${git_command_exit_status} == 0 ]]; then
@@ -128,7 +128,7 @@ function feature_start() {
   exec_git "git checkout -b ${prefixed_branch_name}"
   exec_git "git push origin ${prefixed_branch_name}"
 
-  if [[ ${git_had_output} == 'true' ]]; then
+  if ${git_had_output}; then
     printf "\n"
   fi
   printf "Summary of actions:\n"
@@ -172,7 +172,7 @@ function load_prefixes() {
 
 function run_init_command() {
   prefix='feat/'
-  if [[ ${do_init_use_defaults} == 'true' ]]; then
+  if ${do_init_use_defaults}; then
     printf "Using default branch prefixes:\n"
     printf "  Feature branches: '%s'\n" ${prefix}
   else
@@ -237,11 +237,11 @@ function parse_options() {
   fi
 
   # flags
-  local do_init='false'
-  local do_init_use_defaults='false'
-  local print_git_commands='false'
-  local print_git_output='false'
-  local git_had_output='false'
+  local do_init=false
+  local do_init_use_defaults=false
+  local print_git_commands=false
+  local print_git_output=false
+  local git_had_output=false
 
   # config
   local feature_prefix
@@ -250,10 +250,10 @@ function parse_options() {
   while :; do
     case ${1} in
       init)
-        do_init='true'
+        do_init=true
         shift
         if [[ "${1}" == '--defaults' ]]; then
-          do_init_use_defaults='true'
+          do_init_use_defaults=true
           shift
         fi
         continue
@@ -274,7 +274,7 @@ function parse_options() {
         fi
         ;;
       -c|--print-git-commands)
-        print_git_commands='true'
+        print_git_commands=true
         ;;
       -d|--debug)
         GITRFLOW_BASH_XTRACE='true'
@@ -284,7 +284,7 @@ function parse_options() {
         print_usage_and_exit
         ;;
       -o|--print-git-output)
-        print_git_output='true'
+        print_git_output=true
         ;;
       -V|--version)
         print_version
@@ -308,7 +308,7 @@ function parse_options() {
 
   set -o nounset
 
-  if [[ ${do_init} == true ]]; then
+  if ${do_init}; then
     run_init_command
     exit 0
   fi
