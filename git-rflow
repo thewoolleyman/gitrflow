@@ -88,9 +88,9 @@ function exec_git() {
 
 function run_branch_command() {
   # declare variables with local scope to this function and all subfunctions
-  declare git_command
-  declare git_output
-  declare prefixed_branch_name
+  local git_command
+  local git_output
+  local prefixed_branch_name
 
   fail_unless_repo_clean
   fail_if_unpushed_changes
@@ -144,7 +144,7 @@ function feature_start() {
 ###
 
 function load_config_or_fail() {
-  declare config_loaded='true'
+  local config_loaded='true'
   load_config
   if [[ ! ${config_loaded} == 'true' ]]; then
     print_error_and_exit 'ERROR: Not a gitrflow-enabled repo yet. Please run "git rflow init [--defaults]" first.'
@@ -237,14 +237,14 @@ function parse_options() {
   fi
 
   # flags
-  declare do_init='false'
-  declare do_init_use_defaults='false'
-  declare print_git_commands='false'
-  declare print_git_output='false'
-  declare git_had_output='false'
+  local do_init='false'
+  local do_init_use_defaults='false'
+  local print_git_commands='false'
+  local print_git_output='false'
+  local git_had_output='false'
 
   # config
-  declare feature_prefix
+  local feature_prefix
 
   # from http://mywiki.wooledge.org/BashFAQ/035
   while :; do
@@ -259,11 +259,11 @@ function parse_options() {
         continue
         ;;
       feature) # Takes an option arguments, ensuring they have been specified.
-        declare branch_type=${1}
+        local branch_type=${1}
         if [[ "${2}" ]]; then
-          declare branch_command=$2
+          local branch_command=$2
           if [[ "${3}" ]]; then
-            declare branch_name=$3
+            local branch_name=$3
             shift 3
             continue
           else
