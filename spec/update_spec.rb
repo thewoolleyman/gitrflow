@@ -52,7 +52,8 @@ describe 'update' do
       FileUtils.cd(local_repo) do
         cmd = gitrflow_cmd(@gitrflow_command)
         out = run(cmd, out: false)
-        expect(out).to match(/Up to date! No changes to pull from remote branch 'origin\/master'\.\n/)
+        expected_msg = /Up to date! No changes to pull from remote branch 'origin\/master'\.\n/
+        expect(out).to match(expected_msg)
       end
     end
 
