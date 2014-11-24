@@ -159,11 +159,11 @@ function run_update_command() {
   fail_unless_local_repo_is_clean_and_unmodified
 
   if [[ ${git_status_output} =~ \[(behind) ]]; then
-    printf "Rebasing local branch '%s' onto remote branch '%s/%s'..." "${current_branch}" "${remote}" "${current_branch}"
+    printf "Rebasing local branch '%s' onto remote branch '%s/%s'...\n" "${current_branch}" "${remote}" "${current_branch}"
     exec_git "git rebase ${remote}/${current_branch}"
-    printf "Rebase complete!  Local branch '%s' is now up-to-date." "${current_branch}"
+    printf "Rebase complete!  Local branch '%s' is now up-to-date.\n" "${current_branch}"
   else
-    printf "Up to date! No changes to pull from remote branch '%s/%s'." "${remote}" "${current_branch}"
+    printf "Up to date! No changes to pull from remote branch '%s/%s'.\n" "${remote}" "${current_branch}"
   fi
 }
 

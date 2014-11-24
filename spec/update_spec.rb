@@ -52,7 +52,7 @@ describe 'update' do
       FileUtils.cd(local_repo) do
         cmd = gitrflow_cmd(@gitrflow_command)
         out = run(cmd, out: false)
-        expect(out).to match(/Up to date! No changes to pull from remote branch 'origin\/master'./)
+        expect(out).to match(/Up to date! No changes to pull from remote branch 'origin\/master'\.\n/)
       end
     end
 
@@ -67,8 +67,8 @@ describe 'update' do
       FileUtils.cd(local_repo) do
         cmd = gitrflow_cmd(@gitrflow_command)
         out = run(cmd, out: false)
-        expected_msg1 = /Rebasing local branch 'master' onto remote branch 'origin\/master'.../
-        expected_msg2 = /Rebase complete!  Local branch 'master' is now up-to-date./
+        expected_msg1 = /Rebasing local branch 'master' onto remote branch 'origin\/master'...\n/
+        expected_msg2 = /Rebase complete!  Local branch 'master' is now up-to-date.\n/
         expect(out).to match(expected_msg1)
         expect(out).to match(expected_msg2)
         local_sha = run('git rev-parse HEAD', out: false)
