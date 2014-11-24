@@ -63,6 +63,24 @@ describe 'feature start' do
         expect(out).to match(/#{msg}/)
       end
     end
+
+    it 'current branch is not master' do
+      local_repo, _ = make_cloned_repo
+
+      expected_msg = 'ERROR: Local branch is not master.  Currently, git-rflow only supports ' \
+        'feature branches created directly off of master.'
+      FileUtils.cd(local_repo) do
+        cmd = gitrflow_cmd('feature start feature1')
+        run(cmd, out: false)
+
+        cmd2 = gitrflow_cmd('feature start feature2')
+        out = run(cmd2, out: false, exp_rc: 1)
+        expect(out).to match(/#{Regexp.escape(expected_msg)}/)
+
+        git_status = run('git status', out: false)
+        expect(git_status).to match(/On branch feat\/feature1/)
+      end
+    end
   end
 
   describe 'creates the specified feature branch and pushes to remote' do

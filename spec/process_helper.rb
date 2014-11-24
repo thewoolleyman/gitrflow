@@ -94,14 +94,15 @@ module ProcessHelper
     expected_exit_status = options[:expected_exit_status] || 0
     exit_status = wait_thr.value
     return if exit_status.exitstatus == expected_exit_status
-    exit_status_msg =
-      if expected_exit_status == 0
-        ''
-      else
-        " (expected #{expected_exit_status})"
-      end
+    if expected_exit_status == 0
+      result_msg = 'failed'
+      exit_status_msg = ''
+    else
+      result_msg = 'succeeded but was expected to fail'
+      exit_status_msg = " (expected #{expected_exit_status})"
+    end
 
-    exception_message = "Command failed, #{exit_status}#{exit_status_msg}. " \
+    exception_message = "Command #{result_msg}, #{exit_status}#{exit_status_msg}. " \
     "Command: `#{cmd}`."
     if options[:include_output_in_exception]
       exception_message += " Command Output: \"#{output}\""

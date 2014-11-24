@@ -153,6 +153,10 @@ function fail_if_unpulled_changes() {
 ###
 
 function feature_start() {
+  if [[ ! ${current_branch} == 'master' ]]; then
+    print_error_and_exit 'ERROR: Local branch is not master.  Currently, git-rflow only supports feature branches created directly off of master.'
+  fi
+
   exec_git "git checkout -b ${prefixed_branch_name}"
   exec_git "git push ${remote} ${prefixed_branch_name}"
 
