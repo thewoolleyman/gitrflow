@@ -83,25 +83,10 @@ function exec_git() {
 }
 
 ###
-### Branch Command Processing
+### Common Utility Functions
 ###
 
-function run_branch_command() {
-  # declare variables with local scope to this function and all subfunctions
-  local starting_branch
-  local git_command
-  local git_output
-  local prefixed_branch_name
-
-  fail_unless_local_repo_is_pristine
-
-  prefix="${branch_type}_prefix" # e.g. 'feature_prefix
-  # bash indirect parameter expansion: http://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
-  prefixed_branch_name="${!prefix}${branch_name}" # e.g. 'feat/mybranch'
-  "${branch_type}_${branch_command}" # Invoke function, e.g. 'feature_start'
-}
-
-function fail_unless_local_repo_is_pristine() {
+function fail_unless_local_repo_is_clean_and_unmodified() {
   fail_unless_repo_clean
 
   fail_if_repo_gone
@@ -112,10 +97,9 @@ function fail_unless_local_repo_is_pristine() {
   fetch_current_branch
 
   exec_git 'git status --porcelain --branch'
-  local git_status_output=${git_output}
+  git_status_output=${git_output}
 
   fail_if_unpushed_changes
-  fail_if_unpulled_changes
 }
 
 function fail_unless_repo_clean() {
@@ -146,6 +130,58 @@ function fail_if_unpulled_changes() {
   if [[ ${git_status_output} =~ \[(behind) ]]; then
     print_error_and_exit "ERROR: Local repo is behind remote. Please run 'git rflow update' to pull remote updates, then retry."
   fi
+}
+
+###
+### Command Processing
+###
+
+function run_command() {
+  local current_branch
+  local starting_branch
+  local git_command
+  local git_output
+  local git_status_output
+
+  if ${do_update}; then
+    run_update_command
+  else
+    run_branch_command
+  fi
+
+}
+
+###
+### Update Command Processing
+###
+
+function run_update_command() {
+  fail_unless_local_repo_is_clean_and_unmodified
+
+  if [[ ${git_status_output} =~ \[(behind) ]]; then
+    printf "Rebasing local branch '%s' onto remote branch '%s/%s'..." "${current_branch}" "${remote}" "${current_branch}"
+    exec_git "git rebase ${remote}/${current_branch}"
+    printf "Rebase complete!  Local branch '%s' is now up-to-date." "${current_branch}"
+  else
+    printf "Up to date! No changes to pull from remote branch '%s/%s'." "${remote}" "${current_branch}"
+  fi
+}
+
+###
+### Branch Command Processing
+###
+
+function run_branch_command() {
+  # declare variables with local scope to this function and all subfunctions
+  local prefixed_branch_name
+
+  fail_unless_local_repo_is_clean_and_unmodified
+  fail_if_unpulled_changes
+
+  prefix="${branch_type}_prefix" # e.g. 'feature_prefix
+  # bash indirect parameter expansion: http://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+  prefixed_branch_name="${!prefix}${branch_name}" # e.g. 'feat/mybranch'
+  "${branch_type}_${branch_command}" # Invoke function, e.g. 'feature_start'
 }
 
 ###
@@ -231,6 +267,7 @@ function print_version() {
 function print_usage_and_exit() {
   printf "Usage:\n"
   printf "  gitrflow [global options] init [--defaults]\n"
+  printf "  gitrflow [global options] update\n"
   printf "  gitrflow [global options] <branch type> <command> [command options]\n"
   printf "\n"
   printf "'init' command options:\n"
@@ -274,6 +311,7 @@ function parse_options() {
   # flags
   local do_init=false
   local do_init_use_defaults=false
+  local do_update=false
   local git_output_to_print=false
   local print_git_commands=false
   local print_git_output=false
@@ -292,6 +330,11 @@ function parse_options() {
           do_init_use_defaults=true
           shift
         fi
+        continue
+        ;;
+      update)
+        do_update=true
+        shift
         continue
         ;;
       feature) # Takes an option arguments, ensuring they have been specified.
@@ -351,7 +394,7 @@ function parse_options() {
 
   load_config_or_fail
 
-  run_branch_command
+  run_command
 }
 
 function invoke() {
