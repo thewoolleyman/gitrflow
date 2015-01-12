@@ -72,7 +72,8 @@ class GitrflowSuite
     p_div msgs
     project_root_dir = File.expand_path('../..', __FILE__)
     FileUtils.cd(project_root_dir) do
-      run "BASH_EXECUTABLE=#{bash_executable} GIT_EXECUTABLE=#{git_executable} rspec"
+      rspec_cmd = "rspec #{ARGV.join(' ')}"
+      run "BASH_EXECUTABLE=#{bash_executable} GIT_EXECUTABLE=#{git_executable} #{rspec_cmd}"
     end
   end
 

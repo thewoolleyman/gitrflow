@@ -332,6 +332,8 @@ therein:
   * Or, run a local git version with: `GIT_EXECUTABLE=/path/to/git rspec`
 * Automatically download, compile, and run suite with a specific Bash and Git version:
   * `GITRFLOW_SPEC_GIT_VERSIONS=2.1.3 GITRFLOW_SPEC_BASH_VERSIONS=4.3.30 spec/gitrflow_suite.rb`
+* Run a focused rspec example via the suite (double-quote ALL rspec args):
+  * `GITRFLOW_SPEC_GIT_VERSIONS=1.8.2.3 GITRFLOW_SPEC_BASH_VERSIONS=4.3.30 spec/gitrflow_suite.rb "spec/feature_start_spec.rb --example 'feature start fails if local branch is behind remote'"`
 * Continuous Integration runs on Travis CI against all supported
   Bash and Git versions: [![Travis-CI Build Status](https://travis-ci.org/thewoolleyman/gitrflow.svg?branch=master)](https://travis-ci.org/thewoolleyman/gitrflow)
 * For verbose bash debugging, set GITRFLOW_BASH_XTRACE=true (note this will cause
