@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.1.1'
+ruby '2.1.5'
 
 gem 'bundler', '~> 1.7.4'
 gem 'rspec', '~> 3.0'
