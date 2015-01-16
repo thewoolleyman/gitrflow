@@ -32,8 +32,8 @@ to prefer `merge` instead.
 
 ## Problems and their solutions
 
-***IMPORTANT NOTE:*** *The following discussion only applies to ***feature***
- branches. The `merge --no-ff` command is still used to manage the
+***IMPORTANT NOTE:*** *The following discussion only applies to* ***feature***
+ *branches. The `merge --no-ff` command is still used to manage the
  master branch and production release branches, which should never have
  their history rewritten by rebase.*
 
