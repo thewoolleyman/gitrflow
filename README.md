@@ -39,6 +39,8 @@ branches.
   * [When committing merge conflicts is unavoidable](readme/goals_and_philosophy.md#when-committing-merge-conflicts-is-unavoidable)
   * [Goals and Benefits of rebase over a merge workflow](readme/goals_and_philosophy.md#goals-and-benefits-of-rebase-over-a-merge-workflow)
 * [Further Reading](#further-reading)
+  * [Articles Supporting a Rebase Workflow](#articles-supporting-a-rebase-workflow)
+  * [General Articles on Git, Branching, and SCM Workflows](#general-articles-on-git-branching-and-scm-workflows)
 * [Glossary](#glossary)
 * [Hacking / Contributing](#hacking--contributing)
 * [Credits](#credits)
@@ -266,7 +268,19 @@ Git](https://travis-ci.org/thewoolleyman/gitrflow).
 
 # Further Reading
 
-Here's some links by smart people on the topics of feature branches and rebasing.
+## Articles Supporting a Rebase Workflow
+
+Here's some links to articles specifically recommending and/or describing a rebase-based workflow
+for feature branches:
+
+* [A Rebase Workflow for Git](http://randyfay.com/content/rebase-workflow-git) - Randy Fay
+* [Agile git and the story branch pattern](http://blog.hasmanythrough.com/2008/12/18/agile-git-and-the-story-branch-pattern) - Josh Susser
+* [A Git Workflow for Agile Teams](http://reinh.com/blog/2009/03/02/a-git-workflow-for-agile-teams.html) - Rein Henrichs
+* [Pro Git Book, Section 5.3](http://git-scm.com/book/ch5-3.html) - Scott Chacon and Ben Straub (see section "Rebasing and Cherry Picking Workflows")
+
+## General Articles on Git, Branching, and SCM Workflows
+
+Here's some links to articles by smart people on the topics of feature branches and rebasing.
 I believe that gitrflow reframes and eliminates many of the problems described
 therein:
 
