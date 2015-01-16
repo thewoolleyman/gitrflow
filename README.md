@@ -9,6 +9,19 @@ git workflow. Similar to [gitflow](https://github.com/nvie/gitflow), but uses
 **constant automatic rebasing** instead of manual merges to manage **feature**
 branches.
 
+gitrflow is based upon an opinionated premise:
+
+*"You should use a rebase-based workflow to manage Git feature/story branches."*
+
+If you understand and agree with this, then gitrflow is for you!  Scroll down for
+the TL;DR docs and summary of gitrflow usage, or use the command line help.
+
+If you don't understand what that means, or if you disagree with using a rebase-based workflow
+for feature branches, then I respectfully invite you to review the
+[Goals, and Philosophy](readme/goals_and_philosophy.md) page with an open mind.
+
+Thanks for reading. :)
+
 # Table of Contents
 
 * [Installing](#installing)
@@ -27,6 +40,7 @@ branches.
     * [rflow hotfix finish](#rflow-hotfix-finish)
 * [Compatibility](#compatibility)
 * [Goals, and Philosophy](readme/goals_and_philosophy.md)
+  * [Intro](readme/intro)
   * [Merge or rebase?](readme/goals_and_philosophy.md#merge-or-rebase)
   * [Problems and their solutions](readme/goals_and_philosophy.md#problems-and-their-solutions)
   * ["But rebasing loses information..." - A history lesson](readme/goals_and_philosophy.md#but-rebasing-loses-information---a-history-lesson)

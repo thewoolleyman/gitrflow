@@ -2,6 +2,7 @@
 
 # Table of Contents
 
+* [Intro](#intro)
 * [Merge or rebase?](#merge-or-rebase)
 * [Problems and their solutions](#problems-and-their-solutions)
 * ["But rebasing loses information..." - A history lesson](#but-rebasing-loses-information---a-history-lesson)
@@ -13,6 +14,21 @@
 * [Squash merges - they DO lose information](#squash-merges---they-do-lose-information)
 * [When committing merge conflicts is unavoidable](#when-committing-merge-conflicts-is-unavoidable)
 * [Goals and Benefits of rebase over a merge workflow](#goals-and-benefits-of-rebase-over-a-merge-workflow)
+
+## Intro
+
+gitrflow is based upon an opinionated premise:
+
+*"You should use a rebase-based workflow to manage Git feature/story branches."*
+
+If you understand and agree with this, then gitrflow is for you!  See the
+[README.md](../README.md) for docs and summary of gitrflow usage, or use the command line help.
+
+If you don't understand what that means, or if you disagree with using a rebase-based workflow
+for feature branches, then I respectfully invite you to review this
+Goals, and Philosophy page with an open mind.
+
+Thanks for reading. :)
 
 ## Merge or rebase?
 
@@ -29,6 +45,28 @@ to the point of being a 'religious' war.
 The main goal of **gitrflow** is to support the usage of `rebase`, by
 solving (and reframing) the problems with `rebase` which drive people
 to prefer `merge` instead.
+
+The best justification for rebasing I've seen is by Randy Fay in
+his article [A Rebase Workflow for Git](http://randyfay.com/content/rebase-workflow-git):
+
+> The merge workflow will do you no damage at all if you
+> * Only have one committer (or a very small number of committers, and you trust them all)
+> * AND (*emphasis mine*)
+> * You don't care much about reading your history.
+
+So, to follow up on that, I would ask this: If you are a small team or a team of one,
+AND you ***don't care about reading your history***, why are you using Git with
+feature branches?  It would be much simpler to just always work on master, or
+even use an versioned document system like Google Docs.
+
+In other words (and to invert the above points), if you have a large team, **OR**
+you care about reading your history (which I believe every responsible software
+developer should), then you should be using rebase for feature branches.
+
+Granted, it's hard to get right, especially if you are new to Git, and especially if you
+have a team larger than one to coordinate among, but that's exactly the problems
+gitrflow is designed to solve.  For more detailed discussions of these problems
+and their solutions, continue reading...
 
 ## Problems and their solutions
 
