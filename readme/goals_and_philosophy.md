@@ -101,12 +101,14 @@ Another argument against rebase is that since it rewrites branch history,
 invalid argument.
 
 Why? Because the only "history" that I care about, as a Git user, is the
-***current state of history on my upstream branch***.
+***current state of history on my upstream branch*** and the ***logical
+intent of the commits on my feature branch***.
 
 In other words, if the upstream branch has changed, and my feature branch
 needs to change correspondingly, then ***I don't care about the old state
 of my feature branch, which only works with the old state of the upstream
-branch***.
+branch***, as long as the ***logical intent of the atomic commits on the
+feature branch are preserved***.
 
 Another way of explaining this:  Presumably, the upstream branch was changed
 for a good reason, and those changes are going to stick around for good.
