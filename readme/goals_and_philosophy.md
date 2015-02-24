@@ -4,6 +4,9 @@
 
 * [Intro](#intro)
 * [Merge or rebase?](#merge-or-rebase)
+  * [The debate](#the-debate)
+  * [The Git Book's summary of positions](#the-git-books-summary-of-positions)
+  * [The case for rebasing feature branches](#the-case-for-rebasing-feature-branches)
 * [Problems and their solutions](#problems-and-their-solutions)
 * ["But rebasing loses information..." - A history lesson](#but-rebasing-loses-information---a-history-lesson)
 * [Lack of tool support](#lack-of-tool-support)
@@ -32,6 +35,8 @@ Thanks for reading. :)
 
 ## Merge or rebase?
 
+### The debate
+
 Git has become the de-facto tool for version control in the modern software
 industry.
 
@@ -45,6 +50,40 @@ to the point of being a 'religious' war.
 The main goal of **gitrflow** is to support the usage of `rebase`, by
 solving (and reframing) the problems with `rebase` which drive people
 to prefer `merge` instead.
+
+### The Git Book's summary of positions
+
+The **Git Book** provides [the following excellent summary](http://git-scm.com/book/en/v2/Git-Branching-Rebasing#Rebase-vs.-Merge)
+of both sides of the debate.
+
+The case for merging:
+
+> One point of view on this is that your repository’s commit history is a record
+> of what actually happened. It’s a historical document, valuable in its own right,
+> and shouldn’t be tampered with. From this angle, changing the commit history is
+> almost blasphemous; you’re lying about what actually transpired. So what if
+> there was a messy series of merge commits? That’s how it happened, and the
+> repository should preserve that for posterity.
+
+...and the case for rebasing:
+
+> The opposing point of view is that the commit history is the story of how your
+> project was made. You wouldn’t publish the first draft of a book, and the manual
+> for how to maintain your software deserves careful editing. This is the camp
+> that uses tools like rebase and filter-branch to tell the story in the way
+> that’s best for future readers.
+
+So, the position of gitrflow is that **BOTH** positions are correct:
+
+* For master and production release branches, you should NEVER change history,
+  and therefore these types branches should never be rebased.
+* For feature branches, you only care about the story of how the feature branch
+  was made, not about any draft versions.  This is because it will eventually be
+  merged, in its final, rebased form, to the master branch, and that final version
+  of the feature branch's history IS the one (and the ONLY one) that matters.
+  to master, which is 
+
+### The case for rebasing feature branches
 
 The best justification for rebasing I've seen is by Randy Fay in
 his article [A Rebase Workflow for Git](http://randyfay.com/content/rebase-workflow-git):
