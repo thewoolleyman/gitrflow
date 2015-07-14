@@ -5,7 +5,7 @@ describe 'lib versions' do
     it 'expected version of bash is actually being used' do
       unless bash_executable == 'bash'
         version = bash_executable.split('/')[-2].split('-')[-1]
-        expect(run("#{bash_executable} --version", out: false)).to match(version)
+        expect(run("#{bash_executable} --version", out: :error)).to match(version)
       end
     end
 
@@ -13,7 +13,7 @@ describe 'lib versions' do
       unless git_executable == 'git'
         version = git_executable.split('/')[-2].split('-')[-1]
         cmd = "#{bash_executable} -c '#{git_executable} --version'"
-        expect(run(cmd, out: false)).to match(version)
+        expect(run(cmd, out: :error)).to match(version)
       end
     end
   end

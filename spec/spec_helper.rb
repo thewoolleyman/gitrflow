@@ -1,6 +1,6 @@
 require 'rspec'
 require 'tmpdir'
-require_relative 'process_helper'
+require 'process_helper'
 
 # RSpec config
 RSpec.configure do |c|
@@ -38,7 +38,7 @@ module SpecHelper
   end
 
   def git_version
-    version_output = run("#{git_executable} --version", out: false)
+    version_output = run("#{git_executable} --version", out: :error)
     regex = /^git version (\d)\.(\d)\.(\d).*/
     match = regex.match(version_output)
     {
@@ -107,9 +107,9 @@ module SpecHelper
     local_repo_dir, remote_repo_dir = make_cloned_un_gitrflow_initialized_repo(commits)
     FileUtils.cd(local_repo_dir) do
       if init_input_lines
-        run(gitrflow_cmd('init'), in: init_input_lines, out: false)
+        run(gitrflow_cmd('init'), in: init_input_lines, out: :error)
       else
-        run(gitrflow_cmd('init --defaults'), out: false)
+        run(gitrflow_cmd('init --defaults'), out: :error)
       end
     end
     [local_repo_dir, remote_repo_dir]
@@ -119,7 +119,7 @@ module SpecHelper
     local_repo_parent_dir = Dir.mktmpdir
     remote_repo_dir = make_remote_repo(commits)
     FileUtils.cd(local_repo_parent_dir) do
-      run("git clone #{remote_repo_dir} local_repo", out: false)
+      run("git clone #{remote_repo_dir} local_repo", out: :error)
     end
     ["#{local_repo_parent_dir}/local_repo", remote_repo_dir]
   end
@@ -134,15 +134,21 @@ module SpecHelper
     end
     remote_repo_dir = Dir.mktmpdir('remote_repo_')
     FileUtils.cd(remote_repo_dir) do
-      run('git init', out: false)
+      run('git init', out: :error)
       commits.each do |commit|
         commit.each do |filename, contents|
-          run("echo #{contents} > #{filename}", out: false)
+          run("echo #{contents} > #{filename}", out: :error)
         end
       end
-      run('git add . && git commit -m "commit 1"', out: false) unless commits.empty?
+      run('git add . && git commit -m "commit 1"', out: :error) unless commits.empty?
     end
     remote_repo_dir
   end
 end
+
+# alias ProcessHelper#process to #run for brevity
+module ProcessHelper
+  alias_method :run, :process
+end
+
 include SpecHelper

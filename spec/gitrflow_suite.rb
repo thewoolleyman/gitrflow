@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'fileutils'
-require_relative 'process_helper'
+require 'process_helper'
 
 # Runs specs under multiple versions of git
 class GitrflowSuite
@@ -49,14 +49,14 @@ class GitrflowSuite
       lib_src_file = "#{lib_src_dir}.tar.gz"
       lib_src_url = "#{lib_src_url_prefix}#{lib_src_file}"
 
-      run("wget -q #{lib_src_url}", out: false) unless File.exist?(lib_src_file)
+      run("wget -q #{lib_src_url}", out: :error) unless File.exist?(lib_src_file)
 
-      run("tar -zxf #{lib_src_file}", out: false) unless File.exist?(lib_src_dir)
+      run("tar -zxf #{lib_src_file}", out: :error) unless File.exist?(lib_src_dir)
 
       unless File.exist?(lib_executable)
         FileUtils.cd(lib_src_dir) do
-          run('./configure', out: false)
-          run('make', out: false)
+          run('./configure', out: :error)
+          run('make', out: :error)
         end
       end
       return File.expand_path(lib_executable)
