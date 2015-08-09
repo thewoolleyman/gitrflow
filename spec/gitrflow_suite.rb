@@ -2,6 +2,11 @@
 require 'fileutils'
 require 'process_helper'
 
+# alias ProcessHelper#process to #run for brevity
+module ProcessHelper
+  alias_method :run, :process
+end
+
 # Runs specs under multiple versions of git
 class GitrflowSuite
   include ProcessHelper
