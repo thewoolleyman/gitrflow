@@ -1,12 +1,11 @@
 ---
 branches:
-  except:
+  only:
     - f/gorewrite
 
-script: bundle exec spec/gitrflow_suite.rb
+language: go
+
+go:
+  - 1.4.2
+
 sudo: false
-cache:
-  directories:
-  - vendor/bundle
-  - spec/gits
-  - spec/bashs
