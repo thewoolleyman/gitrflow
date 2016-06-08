@@ -166,6 +166,12 @@ However, after carefully reading many articles on gitflow, and all the comments
 on them, there will be some fundamental differences in the release branch
 support in gitrflow:
 
+**UPDATE: Actually you can have a "develop" branch as your main if you want.
+My thinking has evolved on this, it doesn't really matter what you name
+your upstream branch, or if you have it "promoted" to other branches,
+e.g. the standard Gitflow develop -> master approach.  I'll update the docs
+accordingly, but everything else still applies.  TODO: UPDATE ACCORDINGLY.**
+
 1. There will be no "develop" branch.
   * All feature and release branches will have the "master" branch as their
     upstream.  The only purpose of the "master" branch in the gitflow workflow

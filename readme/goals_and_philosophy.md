@@ -33,6 +33,12 @@ Goals, and Philosophy page with an open mind.
 
 Thanks for reading. :)
 
+**UPDATE: Actually you can have a "develop" branch as your main if you want.
+My thinking has evolved on this, it doesn't really matter what you name
+your upstream branch, or if you have it "promoted" to other branches,
+e.g. the standard Gitflow develop -> master approach.  I'll update the docs
+accordingly, but everything else still applies.  TODO: UPDATE ACCORDINGLY.**
+
 ## Merge or rebase?
 
 ### The debate
