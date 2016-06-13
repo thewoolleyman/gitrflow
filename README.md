@@ -4,6 +4,17 @@
 
 # gitrflow
 
+**UPDATE: I had  put this project on hold, because
+I got interested in other things, and my plan to use
+bash as a cross-platform language was a bad idea
+(after having written a lot of bash, I'm convinced the
+best use of bash is as little bash as possible).
+But since it [recently got some attention](https://twitter.com/testobsessed/status/742065125268430848),
+I may pick it up again.  I had been considering anyway
+to write it in Haskell as a learning exercise.  If
+you have any interest in using it, let me know,
+maybe it will motivate me ;)**
+
 Git extensions to provide high-level repository operations for a rebase-based
 git workflow. Similar to [gitflow](https://github.com/nvie/gitflow), but uses
 **constant automatic rebasing** instead of manual merges to manage **feature**
