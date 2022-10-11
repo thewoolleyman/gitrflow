@@ -2,18 +2,22 @@
 
 [Pivotal Tracker Project](https://www.pivotaltracker.com/n/projects/1205482)
 
-# gitrflow
+# THIS PROJECT IS NO LONGER UNDER DEVELOPMENT
 
-**UPDATE: I had  put this project on hold, because
-I got interested in other things, and my plan to use
-bash as a cross-platform language was a bad idea
-(after having written a lot of bash, I'm convinced the
-best use of bash is as little bash as possible).
-But since it [recently got some attention](https://twitter.com/testobsessed/status/742065125268430848),
-I may pick it up again.  I had been considering anyway
-to write it in Haskell as a learning exercise.  If
-you have any interest in using it, let me know,
-maybe it will motivate me ;)**
+**UPDATE: This project is abandoned and I won't be continuing to work on it. The most important and still-relevant take-away from it is my argument for using a rebase-based workflow instead of merge-based workflow for managing feature branches, which you can read in the [Goals, and Philosophy page](readme/goals_and_philosophy.md)**
+
+This is because I have evolved in my thinking on the process of updating feature branches, and whether it should be scripted or not:
+
+1. A solid understanding of how to manage your own feature branches directly via git is a prerequisite for any dev working in modern software development teams.
+1. In my opinion, the process for managing a feature branch shouldn't be attempted to be automated or scripted, for two reasons:
+    1. You can't, because it will often involve manual conflict resolution, which can't be scripted. Or, even if you did, it sort of defeats the point, because the conflict resolution is the hardest part anyway, and you have to have some complex script process to "resume" after the conflict resolution step.
+    1. Developers should understand the underlying git commands and what they are doing. This is because there's invariably eventually some unexpected or edge case situation that you need to resolve, and if you always rely on a script that only handles the happy path case, you will be lost as to how to handle these edge cases.
+
+Other people's opinions may differ, though. If you feel like this would be useful, feel free to steal any ideas or code from this repo :)
+
+Also, my plan to use bash as a cross-platform language was a bad idea. If I did attempt to write a cross-platform CLI such as this today, I would definitely use the Rust language.
+
+# gitrflow
 
 Git extensions to provide high-level repository operations for a rebase-based
 git workflow. Similar to [gitflow](https://github.com/nvie/gitflow), but uses
